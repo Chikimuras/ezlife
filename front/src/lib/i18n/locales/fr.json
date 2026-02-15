@@ -1,0 +1,283 @@
+{
+  "common": {
+    "add": "Ajouter",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "error": "Une erreur s'est produite",
+    "loading": "Chargement...",
+    "no": "Non",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "yes": "Oui",
+    "locale": "fr-FR",
+    "dismiss": "Ignorer",
+    "contactSupport": "Contacter le Support",
+    "goBack": "Retour",
+    "tryAgain": "Réessayer"
+  },
+  "landing": {
+    "features": {
+      "customizable": {
+        "description": "Adaptez les catégories et métriques à votre style de vie unique",
+        "title": "Entièrement Personnalisable"
+      },
+      "insights": {
+        "description": "Statistiques journalières, hebdomadaires, mensuelles et annuelles à portée de main",
+        "title": "Analyses Puissantes"
+      },
+      "title": "Tout ce dont vous avez besoin",
+      "tracking": {
+        "description": "Enregistrez vos activités en quelques secondes avec notre interface intuitive",
+        "title": "Suivi Facile"
+      }
+    },
+    "hero": {
+      "cta": "Commencer",
+      "learnMore": "En savoir plus",
+      "subtitle": "Votre tracker d'activité et de temps personnel pour mieux comprendre votre quotidien",
+      "title": "Suivez Chaque Instant"
+    }
+  },
+  "login": {
+    "googleButton": "Continuer avec Google",
+    "noAccount": "Pas de compte ?",
+    "signUp": "S'inscrire",
+    "subtitle": "Connectez-vous pour continuer à suivre vos activités",
+    "title": "Bon Retour"
+  },
+  "nav": {
+    "activities": "Activités",
+    "dashboard": "Tableau de bord",
+    "import": "Importer",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "settings": "Paramètres"
+  },
+  "activities": {
+    "title": "Activités Journalières",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "tomorrow": "Demain",
+    "schedule": "Planning",
+    "add": "Ajouter une Activité",
+    "edit": "Modifier l'Activité",
+    "viewMode": {
+      "day": "Jour",
+      "week": "Semaine"
+    },
+    "fields": {
+      "category": "Catégorie",
+      "categoryPlaceholder": "Sélectionner une catégorie",
+      "startTime": "Heure de Début",
+      "endTime": "Heure de Fin",
+      "notes": "Notes",
+      "notesPlaceholder": "Notes optionnelles..."
+    },
+    "messages": {
+      "created": "Activité créée avec succès",
+      "createError": "Échec de la création de l'activité",
+      "updated": "Activité modifiée avec succès",
+      "updateError": "Échec de la modification de l'activité",
+      "deleted": "Activité supprimée avec succès",
+      "deleteError": "Échec de la suppression de l'activité",
+      "conflictError": "Conflit horaire avec une autre activité"
+    }
+  },
+  "import": {
+    "title": "Importer des Activités",
+    "description": "Téléchargez un fichier Excel pour importer vos activités, catégories et groupes",
+    "upload": "Télécharger le Fichier",
+    "uploading": "Téléchargement...",
+    "dropZone": {
+      "description": "Glissez-déposez votre fichier Excel ici, ou",
+      "browse": "Parcourir les Fichiers",
+      "formats": "Formats acceptés : .xlsx, .xls"
+    },
+    "messages": {
+      "success": "Import terminé avec succès !",
+      "partialSuccess": "Import terminé avec des avertissements"
+    },
+    "results": {
+      "success": "Import réussi !",
+      "partialSuccess": "Import terminé avec des avertissements",
+      "groupsCreated": "Groupes créés : {count}",
+      "categoriesCreated": "Catégories créées : {count}",
+      "activitiesCreated": "Activités créées : {count}",
+      "errors": "Erreurs rencontrées :"
+    },
+    "actions": {
+      "importAnother": "Importer un Autre Fichier",
+      "viewActivities": "Voir les Activités"
+    },
+    "errors": {
+      "invalidFileType": "Type de fichier invalide. Veuillez télécharger un fichier .xlsx ou .xls",
+      "uploadFailed": "Échec du téléchargement. Veuillez réessayer"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "viewMode": {
+      "daily": "Quotidien",
+      "weekly": "Hebdomadaire"
+    },
+    "totalTime": {
+      "title": "Temps Total Aujourd'hui",
+      "titleWeekly": "Temps Total Cette Semaine",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "thisWeek": "Cette semaine",
+      "lastWeek": "Semaine dernière",
+      "vsYesterday": "vs hier",
+      "vsLastWeek": "vs semaine dernière",
+      "noChange": "Aucun changement"
+    },
+    "groupBreakdown": {
+      "title": "Temps par Groupe",
+      "titleWeekly": "Temps Hebdomadaire par Groupe",
+      "empty": "Aucune activité enregistrée"
+    },
+    "topCategories": {
+      "title": "Top 5 Catégories",
+      "titleWeekly": "Top 5 Catégories Cette Semaine",
+      "empty": "Aucune activité enregistrée"
+    },
+    "stats": {
+      "activitiesCount": "Activités",
+      "categoriesUsed": "Catégories Utilisées",
+      "avgDuration": "Durée Moyenne",
+      "avgDailyTime": "Temps Quotidien Moyen",
+      "mostProductiveDay": "Jour le Plus Productif",
+      "longestActivity": "Activité la Plus Longue",
+      "noData": "Pas de données"
+    },
+    "weekly": {
+      "comingSoon": "Insights hebdomadaires à venir..."
+    }
+  },
+  "settings": {
+    "categories": {
+      "add": "Ajouter une Catégorie",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette catégorie ?",
+      "delete": "Supprimer la Catégorie",
+      "edit": "Modifier la Catégorie",
+      "fields": {
+        "group": "Groupe",
+        "mandatory": "Obligatoire",
+        "maxWeekly": "Max Hebdo (h)",
+        "minWeekly": "Min Hebdo (h)",
+        "name": "Nom de la Catégorie",
+        "priority": "Priorité",
+        "targetWeekly": "Cible Hebdo (h)",
+        "unit": "Unité"
+      },
+      "messages": {
+        "createError": "Échec de la création de la catégorie",
+        "created": "Catégorie créée avec succès",
+        "deleteError": "Échec de la suppression de la catégorie",
+        "deleted": "Catégorie supprimée avec succès",
+        "updateError": "Échec de la modification de la catégorie",
+        "updated": "Catégorie modifiée avec succès"
+      },
+      "title": "Catégories d'Activités",
+      "units": {
+        "count": "Compteur",
+        "hours": "Heures",
+        "minutes": "Minutes"
+      }
+    },
+    "constraints": {
+      "fields": {
+        "minSleep": "Heures Minimum Sommeil",
+        "overutilization": "Seuil Sur-utilisation",
+        "totalWeekly": "Heures Totales Semaine",
+        "underutilization": "Seuil Sous-utilisation",
+        "wastedTime": "Seuil Temps Perdu (h)"
+      },
+      "messages": {
+        "updateError": "Échec de la mise à jour des contraintes",
+        "updated": "Contraintes mises à jour avec succès"
+      },
+      "save": "Enregistrer les Contraintes",
+      "title": "Contraintes Globales"
+    },
+    "groups": {
+      "add": "Ajouter un Groupe",
+      "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce groupe ?",
+      "delete": "Supprimer le Groupe",
+      "edit": "Modifier le Groupe",
+      "fields": {
+        "color": "Couleur",
+        "name": "Nom du Groupe"
+      },
+      "messages": {
+        "createError": "Échec de la création du groupe",
+        "created": "Groupe créé avec succès",
+        "deleteError": "Échec de la suppression du groupe",
+        "deleted": "Groupe supprimé avec succès",
+        "updateError": "Échec de la modification du groupe",
+        "updated": "Groupe modifié avec succès"
+      },
+      "title": "Groupes d'Activités"
+    },
+    "tabs": {
+      "categories": "Catégories",
+      "constraints": "Contraintes Globales",
+      "groups": "Groupes"
+    },
+    "title": "Paramètres"
+  },
+  "errors": {
+    "network": {
+      "title": "Erreur de Connexion",
+      "offline": "Vous semblez être hors ligne. Veuillez vérifier votre connexion Internet.",
+      "timeout": "La requête a pris trop de temps. Veuillez réessayer.",
+      "generic": "Impossible de se connecter au serveur. Vérifiez votre connexion et réessayez."
+    },
+    "auth": {
+      "title": "Erreur d'Authentification",
+      "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+      "invalidCredentials": "Identifiants invalides. Veuillez réessayer.",
+      "unauthorized": "Vous n'avez pas la permission d'accéder à cette ressource.",
+      "generic": "L'authentification a échoué. Veuillez vous reconnecter."
+    },
+    "validation": {
+      "title": "Erreur de Validation",
+      "required": "Ce champ est obligatoire",
+      "invalidFormat": "Format invalide",
+      "generic": "Veuillez vérifier vos données et réessayer."
+    },
+    "notFound": {
+      "title": "Non Trouvé",
+      "resource": "La ressource demandée n'a pas été trouvée.",
+      "page": "Cette page n'existe pas.",
+      "generic": "Nous n'avons pas trouvé ce que vous cherchez."
+    },
+    "server": {
+      "title": "Erreur Serveur",
+      "internal": "Une erreur interne du serveur s'est produite. Notre équipe a été notifiée.",
+      "maintenance": "Le serveur est actuellement en maintenance. Veuillez réessayer plus tard.",
+      "generic": "Un problème s'est produit de notre côté. Veuillez réessayer plus tard."
+    },
+    "unknown": {
+      "title": "Erreur Inattendue",
+      "generic": "Une erreur inattendue s'est produite. Veuillez réessayer."
+    },
+    "actions": {
+      "retry": "Réessayer",
+      "login": "Se Connecter",
+      "contactSupport": "Contacter le Support",
+      "dismiss": "Ignorer",
+      "goHome": "Retour Accueil",
+      "reload": "Recharger la Page"
+    },
+    "boundary": {
+      "title": "Une erreur s'est produite",
+      "message": "Une erreur inattendue s'est produite. Nous avons été notifiés et travaillons sur une solution.",
+      "details": "Détails de l'erreur",
+      "showDetails": "Afficher les détails techniques",
+      "hideDetails": "Masquer les détails techniques"
+    }
+  }
+}

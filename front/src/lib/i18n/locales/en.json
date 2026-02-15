@@ -1,0 +1,283 @@
+{
+  "common": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "error": "An error occurred",
+    "loading": "Loading...",
+    "no": "No",
+    "retry": "Retry",
+    "save": "Save",
+    "yes": "Yes",
+    "locale": "en-US",
+    "dismiss": "Dismiss",
+    "contactSupport": "Contact Support",
+    "goBack": "Go Back",
+    "tryAgain": "Try Again"
+  },
+  "landing": {
+    "features": {
+      "customizable": {
+        "description": "Adapt categories and metrics to fit your unique lifestyle",
+        "title": "Fully Customizable"
+      },
+      "insights": {
+        "description": "Daily, weekly, monthly, and yearly analytics at your fingertips",
+        "title": "Powerful Insights"
+      },
+      "title": "Everything You Need",
+      "tracking": {
+        "description": "Log your activities in seconds with our intuitive interface",
+        "title": "Easy Tracking"
+      }
+    },
+    "hero": {
+      "cta": "Get Started",
+      "learnMore": "Learn More",
+      "subtitle": "Your personal activity and time tracker for better insights into your daily life",
+      "title": "Track Every Moment"
+    }
+  },
+  "login": {
+    "googleButton": "Continue with Google",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "subtitle": "Sign in to continue tracking your activities",
+    "title": "Welcome Back"
+  },
+  "nav": {
+    "activities": "Activities",
+    "dashboard": "Dashboard",
+    "import": "Import",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "settings": "Settings"
+  },
+  "activities": {
+    "title": "Daily Activities",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "schedule": "Schedule",
+    "add": "Add Activity",
+    "edit": "Edit Activity",
+    "viewMode": {
+      "day": "Day",
+      "week": "Week"
+    },
+    "fields": {
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "notes": "Notes",
+      "notesPlaceholder": "Optional notes..."
+    },
+    "messages": {
+      "created": "Activity created successfully",
+      "createError": "Failed to create activity",
+      "updated": "Activity updated successfully",
+      "updateError": "Failed to update activity",
+      "deleted": "Activity deleted successfully",
+      "deleteError": "Failed to delete activity",
+      "conflictError": "Time conflict with another activity"
+    }
+  },
+  "import": {
+    "title": "Import Activities",
+    "description": "Upload an Excel file to import your activities, categories, and groups",
+    "upload": "Upload File",
+    "uploading": "Uploading...",
+    "dropZone": {
+      "description": "Drag and drop your Excel file here, or",
+      "browse": "Browse Files",
+      "formats": "Supported formats: .xlsx, .xls"
+    },
+    "messages": {
+      "success": "Import completed successfully!",
+      "partialSuccess": "Import completed with some warnings"
+    },
+    "results": {
+      "success": "Import successful!",
+      "partialSuccess": "Import completed with warnings",
+      "groupsCreated": "Groups created: {count}",
+      "categoriesCreated": "Categories created: {count}",
+      "activitiesCreated": "Activities created: {count}",
+      "errors": "Errors encountered:"
+    },
+    "actions": {
+      "importAnother": "Import Another File",
+      "viewActivities": "View Activities"
+    },
+    "errors": {
+      "invalidFileType": "Invalid file type. Please upload .xlsx or .xls file",
+      "uploadFailed": "Upload failed. Please try again"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "viewMode": {
+      "daily": "Daily",
+      "weekly": "Weekly"
+    },
+    "totalTime": {
+      "title": "Total Time Today",
+      "titleWeekly": "Total Time This Week",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "thisWeek": "This week",
+      "lastWeek": "Last week",
+      "vsYesterday": "vs yesterday",
+      "vsLastWeek": "vs last week",
+      "noChange": "No change"
+    },
+    "groupBreakdown": {
+      "title": "Time by Group",
+      "titleWeekly": "Weekly Time by Group",
+      "empty": "No activities recorded"
+    },
+    "topCategories": {
+      "title": "Top 5 Categories",
+      "titleWeekly": "Top 5 Categories This Week",
+      "empty": "No activities recorded"
+    },
+    "stats": {
+      "activitiesCount": "Activities",
+      "categoriesUsed": "Categories Used",
+      "avgDuration": "Avg Duration",
+      "avgDailyTime": "Avg Daily Time",
+      "mostProductiveDay": "Most Productive Day",
+      "longestActivity": "Longest Activity",
+      "noData": "No data"
+    },
+    "weekly": {
+      "comingSoon": "Weekly insights coming soon..."
+    }
+  },
+  "settings": {
+    "categories": {
+      "add": "Add Category",
+      "confirmDelete": "Are you sure you want to delete this category?",
+      "delete": "Delete Category",
+      "edit": "Edit Category",
+      "fields": {
+        "group": "Group",
+        "mandatory": "Mandatory",
+        "maxWeekly": "Max Weekly (h)",
+        "minWeekly": "Min Weekly (h)",
+        "name": "Category Name",
+        "priority": "Priority",
+        "targetWeekly": "Target Weekly (h)",
+        "unit": "Unit"
+      },
+      "messages": {
+        "createError": "Failed to create category",
+        "created": "Category created successfully",
+        "deleteError": "Failed to delete category",
+        "deleted": "Category deleted successfully",
+        "updateError": "Failed to update category",
+        "updated": "Category updated successfully"
+      },
+      "title": "Activity Categories",
+      "units": {
+        "count": "Count",
+        "hours": "Hours",
+        "minutes": "Minutes"
+      }
+    },
+    "constraints": {
+      "fields": {
+        "minSleep": "Minimum Sleep Hours",
+        "overutilization": "Overutilization Threshold",
+        "totalWeekly": "Total Weekly Hours",
+        "underutilization": "Underutilization Threshold",
+        "wastedTime": "Wasted Time Threshold (h)"
+      },
+      "messages": {
+        "updateError": "Failed to update constraints",
+        "updated": "Constraints updated successfully"
+      },
+      "save": "Save Constraints",
+      "title": "Global Constraints"
+    },
+    "groups": {
+      "add": "Add Group",
+      "confirmDelete": "Are you sure you want to delete this group?",
+      "delete": "Delete Group",
+      "edit": "Edit Group",
+      "fields": {
+        "color": "Color",
+        "name": "Group Name"
+      },
+      "messages": {
+        "createError": "Failed to create group",
+        "created": "Group created successfully",
+        "deleteError": "Failed to delete group",
+        "deleted": "Group deleted successfully",
+        "updateError": "Failed to update group",
+        "updated": "Group updated successfully"
+      },
+      "title": "Activity Groups"
+    },
+    "tabs": {
+      "categories": "Categories",
+      "constraints": "Global Constraints",
+      "groups": "Groups"
+    },
+    "title": "Settings"
+  },
+  "errors": {
+    "network": {
+      "title": "Connection Error",
+      "offline": "You appear to be offline. Please check your internet connection.",
+      "timeout": "The request took too long to complete. Please try again.",
+      "generic": "Unable to connect to the server. Please check your connection and try again."
+    },
+    "auth": {
+      "title": "Authentication Error",
+      "sessionExpired": "Your session has expired. Please log in again.",
+      "invalidCredentials": "Invalid credentials. Please try again.",
+      "unauthorized": "You don't have permission to access this resource.",
+      "generic": "Authentication failed. Please log in again."
+    },
+    "validation": {
+      "title": "Validation Error",
+      "required": "This field is required",
+      "invalidFormat": "Invalid format",
+      "generic": "Please check your input and try again."
+    },
+    "notFound": {
+      "title": "Not Found",
+      "resource": "The requested resource was not found.",
+      "page": "This page doesn't exist.",
+      "generic": "We couldn't find what you're looking for."
+    },
+    "server": {
+      "title": "Server Error",
+      "internal": "An internal server error occurred. Our team has been notified.",
+      "maintenance": "The server is currently undergoing maintenance. Please try again later.",
+      "generic": "Something went wrong on our end. Please try again later."
+    },
+    "unknown": {
+      "title": "Unexpected Error",
+      "generic": "An unexpected error occurred. Please try again."
+    },
+    "actions": {
+      "retry": "Try Again",
+      "login": "Log In",
+      "contactSupport": "Contact Support",
+      "dismiss": "Dismiss",
+      "goHome": "Go Home",
+      "reload": "Reload Page"
+    },
+    "boundary": {
+      "title": "Something went wrong",
+      "message": "An unexpected error occurred. We've been notified and are working on a fix.",
+      "details": "Error Details",
+      "showDetails": "Show technical details",
+      "hideDetails": "Hide technical details"
+    }
+  }
+}
