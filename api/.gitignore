@@ -14,3 +14,10 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+
+# Personal files - do not commit
+*.dmg
+*.pdf
+*.csv
+*.xlsx
+TimeTracker/

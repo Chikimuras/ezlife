@@ -68,7 +68,80 @@ class User(Base):
 ### Error Handling
 - Use **FastAPI `HTTPException`** for API errors.
 - Never use bare `except:` blocks. Always catch specific exceptions.
-- Log errors before raising HTTP exceptions if internal debugging is needed.
+- **ALWAYS log errors** before raising HTTP exceptions (see Logging section below).
+
+### Logging (Loguru)
+We use **Loguru** for structured, colored logging with automatic file rotation.
+
+#### Configuration
+- **Setup**: `app/core/logging.py` - Pre-configured with console + file outputs
+- **Log Files**: `/app/logs/` (inside Docker container)
+  - `app_YYYY-MM-DD.log` - All logs (INFO+)
+  - `error_YYYY-MM-DD.log` - Errors only (ERROR+)
+- **Rotation**: Daily, 10MB max per file, 30 days retention
+- **Format**: `{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} | {message}`
+
+#### How to Log (MANDATORY)
+**Import loguru at the top of every service/repository file:**
+```python
+from loguru import logger
+```
+
+**Log at appropriate levels:**
+```python
+# Services/Repositories - Log ALL operations
+logger.info(f"Creating activity for user {user_id}")
+logger.debug(f"Query params: {params}")
+logger.warning(f"Category {category_id} not found")
+logger.error(f"Failed to create activity: {str(e)}")
+
+# Endpoints - Minimal logging (middleware handles requests)
+# Only log business-level events, not HTTP details
+logger.info(f"User {user.id} initiated import")
+```
+
+#### When to Log
+| Layer | What to Log | Example |
+|-------|-------------|---------|
+| **Services** | Business operations, decisions, errors | `logger.info("Calculating daily insights for user {user_id}")` |
+| **Repositories** | Database operations, queries | `logger.debug("Fetching activities for date {date}")` |
+| **Endpoints** | Business events only (not HTTP) | `logger.info("User {user.id} uploaded file")` |
+| **Exceptions** | ALWAYS log before raising | `logger.error(f"Validation failed: {e}")` then `raise HTTPException(...)` |
+
+#### Exception Logging Pattern (MANDATORY)
+```python
+# GOOD - Log context before raising
+try:
+    result = await repository.get(id)
+except SQLAlchemyError as e:
+    logger.error(f"Database error fetching activity {id}: {str(e)}")
+    raise HTTPException(status_code=500, detail="Database error")
+
+# BAD - Raising without logging
+try:
+    result = await repository.get(id)
+except SQLAlchemyError as e:
+    raise HTTPException(status_code=500, detail="Database error")  # ❌ No context logged
+```
+
+#### Middleware (Already Configured)
+- **Request Logging**: Every incoming request logged with method, path, client IP
+- **Response Logging**: Status code, duration, request ID
+- **Exception Handling**: All exceptions caught and logged with full context
+
+#### Testing Logs
+```bash
+# View real-time logs
+docker compose logs app -f
+
+# View log files inside container
+docker compose exec app cat /app/logs/app_YYYY-MM-DD.log
+docker compose exec app cat /app/logs/error_YYYY-MM-DD.log
+
+# Search logs for specific patterns
+docker compose logs app | grep ERROR
+docker compose logs app | grep "user_id=123"
+```
 
 ---
 
@@ -109,6 +182,7 @@ app/
 ### 1. Safety First
 - **Never** modify `uv.lock` manually. Use `uv add/remove`.
 - **Never** commit secrets. Use `.env` and `pydantic-settings`.
+- **Always** keep `.env` and `.env.example` consistent. If you add a variable to one, add it to the other.
 - **Always** run `uv run ruff check` before finishing a task.
 
 ### 2. Implementation Strategy
