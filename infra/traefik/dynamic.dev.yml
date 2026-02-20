@@ -1,0 +1,9 @@
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/local.ezlife.com+1.pem
+        keyFile: /certs/local.ezlife.com+1-key.pem
+  certificates:
+    - certFile: /certs/local.ezlife.com+1.pem
+      keyFile: /certs/local.ezlife.com+1-key.pem

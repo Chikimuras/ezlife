@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cd api && uv run pre-commit run conventional-pre-commit --commit-msg-filename "$1" --hook-stage commit-msg

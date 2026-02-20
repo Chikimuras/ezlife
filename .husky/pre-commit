@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd front && npx lint-staged && npm run type-check
+cd ../api && uv run ruff check . && uv run black --check .
