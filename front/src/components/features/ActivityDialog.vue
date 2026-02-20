@@ -7,13 +7,8 @@ import DialogHeader from '@/components/ui/DialogHeader.vue'
 import DialogTitle from '@/components/ui/DialogTitle.vue'
 import DialogFooter from '@/components/ui/DialogFooter.vue'
 import Button from '@/components/ui/Button.vue'
-import Input from '@/components/ui/Input.vue'
-import Label from '@/components/ui/Label.vue'
-import Select from '@/components/ui/Select.vue'
-import SelectTrigger from '@/components/ui/SelectTrigger.vue'
-import SelectValue from '@/components/ui/SelectValue.vue'
-import SelectContent from '@/components/ui/SelectContent.vue'
-import SelectItem from '@/components/ui/SelectItem.vue'
+import FloatingInput from '@/components/ui/FloatingInput.vue'
+import FloatingSelect from '@/components/ui/FloatingSelect.vue'
 import { useCategoriesStore } from '@/stores/categories'
 import type { CreateActivity, Activity } from '@/lib/api/schemas/activity'
 
@@ -44,6 +39,8 @@ const formData = ref<CreateActivity>({
   endTime: '',
   categoryId: '',
   notes: '',
+  taskId: null,
+  isFromTask: false,
 })
 
 watch(
@@ -57,10 +54,14 @@ watch(
           endTime: props.activity.endTime,
           categoryId: props.activity.categoryId,
           notes: props.activity.notes ?? '',
+          taskId: props.activity.taskId ?? null,
+          isFromTask: props.activity.isFromTask ?? false,
         }
       } else {
         formData.value.date = props.date
         formData.value.startTime = props.initialStartTime
+        formData.value.taskId = null
+        formData.value.isFromTask = false
 
         const [hours, minutes] = props.initialStartTime.split(':')
         const endHour = (parseInt(hours ?? '0') + 1).toString().padStart(2, '0')
@@ -98,44 +99,32 @@ const handleDelete = () => {
       </DialogHeader>
 
       <div class="grid gap-4 py-4">
-        <div class="grid gap-2">
-          <Label for="category">{{ t('activities.fields.category') }}</Label>
-          <Select v-model="formData.categoryId">
-            <SelectTrigger>
-              <SelectValue :placeholder="t('activities.fields.categoryPlaceholder')" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-for="category in categoriesStore.categories"
-                :key="category.id"
-                :value="category.id"
-              >
-                {{ category.name }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <FloatingSelect
+          v-model="formData.categoryId"
+          :label="t('activities.fields.category')"
+          :placeholder="t('activities.fields.categoryPlaceholder')"
+          :options="categoriesStore.categories.map(c => ({ value: c.id, label: c.name }))"
+        />
 
         <div class="grid grid-cols-2 gap-4">
-          <div class="grid gap-2">
-            <Label for="startTime">{{ t('activities.fields.startTime') }}</Label>
-            <Input id="startTime" v-model="formData.startTime" type="time" />
-          </div>
+          <FloatingInput
+            v-model="formData.startTime"
+            :label="t('activities.fields.startTime')"
+            type="time"
+          />
 
-          <div class="grid gap-2">
-            <Label for="endTime">{{ t('activities.fields.endTime') }}</Label>
-            <Input id="endTime" v-model="formData.endTime" type="time" />
-          </div>
-        </div>
-
-        <div class="grid gap-2">
-          <Label for="notes">{{ t('activities.fields.notes') }}</Label>
-          <Input
-            id="notes"
-            v-model="formData.notes"
-            :placeholder="t('activities.fields.notesPlaceholder')"
+          <FloatingInput
+            v-model="formData.endTime"
+            :label="t('activities.fields.endTime')"
+            type="time"
           />
         </div>
+
+        <FloatingInput
+          v-model="formData.notes"
+          :label="t('activities.fields.notes')"
+          :placeholder="t('activities.fields.notesPlaceholder')"
+        />
       </div>
 
       <DialogFooter>

@@ -16,8 +16,7 @@ import DialogHeader from '@/components/ui/DialogHeader.vue'
 import DialogTitle from '@/components/ui/DialogTitle.vue'
 import DialogFooter from '@/components/ui/DialogFooter.vue'
 import DialogTrigger from '@/components/ui/DialogTrigger.vue'
-import Input from '@/components/ui/Input.vue'
-import Label from '@/components/ui/Label.vue'
+import FloatingInput from '@/components/ui/FloatingInput.vue'
 import Badge from '@/components/ui/Badge.vue'
 import type { CreateGroup } from '@/lib/api/schemas/group'
 
@@ -135,16 +134,21 @@ const handleDelete = async () => {
           </DialogHeader>
 
           <div class="grid gap-4 py-4">
-            <div class="grid gap-2">
-              <Label for="name">{{ t('settings.groups.fields.name') }}</Label>
-              <Input id="name" v-model="formData.name" />
+            <div class="grid gap-1.5">
+              <FloatingInput v-model="formData.name" :label="t('settings.groups.fields.name')" />
             </div>
 
-            <div class="grid gap-2">
-              <Label for="color">{{ t('settings.groups.fields.color') }}</Label>
+            <div class="grid gap-1.5">
+              <label class="text-xs text-gray-500 font-medium ml-1">{{
+                t('settings.groups.fields.color')
+              }}</label>
               <div class="flex items-center gap-2">
-                <Input id="color" v-model="formData.color" type="color" class="w-20 h-10" />
-                <Input v-model="formData.color" type="text" placeholder="#8B5CF6" />
+                <input
+                  type="color"
+                  v-model="formData.color"
+                  class="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
+                />
+                <FloatingInput v-model="formData.color" label="Hex" class="flex-1" />
               </div>
             </div>
           </div>
@@ -219,16 +223,21 @@ const handleDelete = async () => {
         </DialogHeader>
 
         <div class="grid gap-4 py-4">
-          <div class="grid gap-2">
-            <Label for="edit-name">{{ t('settings.groups.fields.name') }}</Label>
-            <Input id="edit-name" v-model="formData.name" />
+          <div class="grid gap-1.5">
+            <FloatingInput v-model="formData.name" :label="t('settings.groups.fields.name')" />
           </div>
 
-          <div class="grid gap-2">
-            <Label for="edit-color">{{ t('settings.groups.fields.color') }}</Label>
+          <div class="grid gap-1.5">
+            <label class="text-xs text-gray-500 font-medium ml-1">{{
+              t('settings.groups.fields.color')
+            }}</label>
             <div class="flex items-center gap-2">
-              <Input id="edit-color" v-model="formData.color" type="color" class="w-20 h-10" />
-              <Input v-model="formData.color" type="text" placeholder="#8B5CF6" />
+              <input
+                type="color"
+                v-model="formData.color"
+                class="w-10 h-10 rounded-lg cursor-pointer border border-gray-200 p-0.5"
+              />
+              <FloatingInput v-model="formData.color" label="Hex" class="flex-1" />
             </div>
           </div>
         </div>

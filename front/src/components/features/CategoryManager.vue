@@ -17,14 +17,10 @@ import DialogHeader from '@/components/ui/DialogHeader.vue'
 import DialogTitle from '@/components/ui/DialogTitle.vue'
 import DialogFooter from '@/components/ui/DialogFooter.vue'
 import DialogTrigger from '@/components/ui/DialogTrigger.vue'
-import Input from '@/components/ui/Input.vue'
-import Label from '@/components/ui/Label.vue'
-import Select from '@/components/ui/Select.vue'
-import SelectContent from '@/components/ui/SelectContent.vue'
-import SelectItem from '@/components/ui/SelectItem.vue'
-import SelectTrigger from '@/components/ui/SelectTrigger.vue'
-import SelectValue from '@/components/ui/SelectValue.vue'
+import FloatingInput from '@/components/ui/FloatingInput.vue'
+import FloatingSelect from '@/components/ui/FloatingSelect.vue'
 import Checkbox from '@/components/ui/Checkbox.vue'
+import Label from '@/components/ui/Label.vue'
 import type { CreateCategory } from '@/lib/api/schemas/category'
 
 const { t } = useI18n()
@@ -152,88 +148,65 @@ const handleDelete = async () => {
 
           <div class="grid gap-3 py-3">
             <div class="grid gap-1.5">
-              <Label for="name">{{ t('settings.categories.fields.name') }}</Label>
-              <Input id="name" v-model="formData.name" />
+              <FloatingInput v-model="formData.name" :label="t('settings.categories.fields.name')" />
             </div>
 
             <div class="grid gap-1.5">
-              <Label for="group">{{ t('settings.categories.fields.group') }}</Label>
-              <Select v-model="formData.groupId">
-                <SelectTrigger id="group">
-                  <SelectValue :placeholder="t('settings.categories.fields.group')" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="group in groupsStore.groups" :key="group.id" :value="group.id">
-                    {{ group.name }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <FloatingSelect
+                v-model="formData.groupId"
+                :label="t('settings.categories.fields.group')"
+                :options="groupsStore.groups.map((g) => ({ value: g.id, label: g.name }))"
+              />
             </div>
 
             <div class="grid grid-cols-2 gap-3">
               <div class="grid gap-1.5">
-                <Label for="priority">{{ t('settings.categories.fields.priority') }}</Label>
-                <Input
-                  id="priority"
+                <FloatingInput
                   v-model.number="formData.priority"
+                  :label="t('settings.categories.fields.priority')"
                   type="number"
                   min="1"
-                  step="1"
                 />
               </div>
 
               <div class="grid gap-1.5">
-                <Label for="unit">{{ t('settings.categories.fields.unit') }}</Label>
-                <Select v-model="formData.unit">
-                  <SelectTrigger id="unit">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="hours">{{
-                      t('settings.categories.units.hours')
-                    }}</SelectItem>
-                    <SelectItem value="minutes">{{
-                      t('settings.categories.units.minutes')
-                    }}</SelectItem>
-                    <SelectItem value="count">{{
-                      t('settings.categories.units.count')
-                    }}</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FloatingSelect
+                  v-model="formData.unit"
+                  :label="t('settings.categories.fields.unit')"
+                  :options="[
+                    { value: 'hours', label: t('settings.categories.units.hours') },
+                    { value: 'minutes', label: t('settings.categories.units.minutes') },
+                    { value: 'count', label: t('settings.categories.units.count') },
+                  ]"
+                />
               </div>
             </div>
 
             <div class="grid grid-cols-3 gap-3">
               <div class="grid gap-1.5">
-                <Label for="minWeekly">{{ t('settings.categories.fields.minWeekly') }}</Label>
-                <Input
-                  id="minWeekly"
+                <FloatingInput
                   v-model.number="formData.minWeeklyHours"
+                  :label="t('settings.categories.fields.minWeekly')"
                   type="number"
                   min="0"
-                  step="0.5"
                 />
               </div>
 
               <div class="grid gap-2">
-                <Label for="targetWeekly">{{ t('settings.categories.fields.targetWeekly') }}</Label>
-                <Input
-                  id="targetWeekly"
+                <FloatingInput
                   v-model.number="formData.targetWeeklyHours"
+                  :label="t('settings.categories.fields.targetWeekly')"
                   type="number"
                   min="0"
-                  step="0.5"
                 />
               </div>
 
               <div class="grid gap-2">
-                <Label for="maxWeekly">{{ t('settings.categories.fields.maxWeekly') }}</Label>
-                <Input
-                  id="maxWeekly"
+                <FloatingInput
                   v-model.number="formData.maxWeeklyHours"
+                  :label="t('settings.categories.fields.maxWeekly')"
                   type="number"
                   min="0"
-                  step="0.5"
                 />
               </div>
             </div>
@@ -327,86 +300,65 @@ const handleDelete = async () => {
 
         <div class="grid gap-4 py-4">
           <div class="grid gap-2">
-            <Label for="edit-name">{{ t('settings.categories.fields.name') }}</Label>
-            <Input id="edit-name" v-model="formData.name" />
+            <FloatingInput v-model="formData.name" :label="t('settings.categories.fields.name')" />
           </div>
 
           <div class="grid gap-2">
-            <Label for="edit-group">{{ t('settings.categories.fields.group') }}</Label>
-            <Select v-model="formData.groupId">
-              <SelectTrigger id="edit-group">
-                <SelectValue :placeholder="t('settings.categories.fields.group')" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="group in groupsStore.groups" :key="group.id" :value="group.id">
-                  {{ group.name }}
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <FloatingSelect
+              v-model="formData.groupId"
+              :label="t('settings.categories.fields.group')"
+              :options="groupsStore.groups.map((g) => ({ value: g.id, label: g.name }))"
+            />
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div class="grid gap-2">
-              <Label for="edit-priority">{{ t('settings.categories.fields.priority') }}</Label>
-              <Input
-                id="edit-priority"
+              <FloatingInput
                 v-model.number="formData.priority"
+                :label="t('settings.categories.fields.priority')"
                 type="number"
                 min="1"
-                step="1"
               />
             </div>
 
             <div class="grid gap-2">
-              <Label for="edit-unit">{{ t('settings.categories.fields.unit') }}</Label>
-              <Select v-model="formData.unit">
-                <SelectTrigger id="edit-unit">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="hours">{{ t('settings.categories.units.hours') }}</SelectItem>
-                  <SelectItem value="minutes">{{
-                    t('settings.categories.units.minutes')
-                  }}</SelectItem>
-                  <SelectItem value="count">{{ t('settings.categories.units.count') }}</SelectItem>
-                </SelectContent>
-              </Select>
+              <FloatingSelect
+                v-model="formData.unit"
+                :label="t('settings.categories.fields.unit')"
+                :options="[
+                  { value: 'hours', label: t('settings.categories.units.hours') },
+                  { value: 'minutes', label: t('settings.categories.units.minutes') },
+                  { value: 'count', label: t('settings.categories.units.count') },
+                ]"
+              />
             </div>
           </div>
 
           <div class="grid grid-cols-3 gap-4">
             <div class="grid gap-2">
-              <Label for="edit-minWeekly">{{ t('settings.categories.fields.minWeekly') }}</Label>
-              <Input
-                id="edit-minWeekly"
+              <FloatingInput
                 v-model.number="formData.minWeeklyHours"
+                :label="t('settings.categories.fields.minWeekly')"
                 type="number"
                 min="0"
-                step="0.5"
               />
             </div>
 
             <div class="grid gap-2">
-              <Label for="edit-targetWeekly">{{
-                t('settings.categories.fields.targetWeekly')
-              }}</Label>
-              <Input
-                id="edit-targetWeekly"
+              <FloatingInput
                 v-model.number="formData.targetWeeklyHours"
+                :label="t('settings.categories.fields.targetWeekly')"
                 type="number"
                 min="0"
-                step="0.5"
               />
             </div>
 
             <div class="grid gap-2">
-              <Label for="edit-maxWeekly">{{ t('settings.categories.fields.maxWeekly') }}</Label>
-              <Input
-                id="edit-maxWeekly"
+              <FloatingInput
                 v-model.number="formData.maxWeeklyHours"
+                :label="t('settings.categories.fields.maxWeekly')"
                 type="number"
                 min="0"
-                step="0.5"
               />
             </div>
           </div>

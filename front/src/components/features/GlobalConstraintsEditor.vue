@@ -4,8 +4,7 @@ import { useGlobalConstraintsStore } from '@/stores/globalConstraints'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
 import Button from '@/components/ui/Button.vue'
-import Input from '@/components/ui/Input.vue'
-import Label from '@/components/ui/Label.vue'
+import FloatingInput from '@/components/ui/FloatingInput.vue'
 import type { UpdateGlobalConstraints } from '@/lib/api/schemas/globalConstraints'
 
 const { t } = useI18n()
@@ -81,78 +80,64 @@ const handleSave = async () => {
 
     <div v-else class="max-w-2xl border rounded-lg p-4 space-y-6">
       <div class="grid gap-4">
-        <div class="grid gap-2">
-          <Label for="totalWeekly">{{ t('settings.constraints.fields.totalWeekly') }}</Label>
-          <Input
-            id="totalWeekly"
+        <div class="grid gap-1.5">
+          <FloatingInput
             v-model.number="formData.totalWeeklyHours"
+            :label="t('settings.constraints.fields.totalWeekly')"
             type="number"
-            step="1"
             min="0"
             :disabled="isSaving"
           />
-          <p class="text-sm text-gray-500">
+          <p class="text-xs text-gray-400">
             Nombre d'heures dans une semaine (défaut: 168h = 7j × 24h)
           </p>
         </div>
 
-        <div class="grid gap-2">
-          <Label for="minSleep">{{ t('settings.constraints.fields.minSleep') }}</Label>
-          <Input
-            id="minSleep"
+        <div class="grid gap-1.5">
+          <FloatingInput
             v-model.number="formData.minSleepHours"
+            :label="t('settings.constraints.fields.minSleep')"
             type="number"
-            step="1"
             min="0"
             :disabled="isSaving"
           />
-          <p class="text-sm text-gray-500">
+          <p class="text-xs text-gray-400">
             Heures minimales de sommeil par semaine (défaut: 56h = 8h/jour)
           </p>
         </div>
 
-        <div class="grid gap-2">
-          <Label for="underutilization">{{
-            t('settings.constraints.fields.underutilization')
-          }}</Label>
-          <Input
-            id="underutilization"
+        <div class="grid gap-1.5">
+          <FloatingInput
             v-model.number="formData.underutilizationThreshold"
+            :label="t('settings.constraints.fields.underutilization')"
             type="number"
-            step="0.01"
             min="0"
             max="1"
             :disabled="isSaving"
           />
-          <p class="text-sm text-gray-500">Seuil de sous-utilisation (0.80 = 80%)</p>
+          <p class="text-xs text-gray-400">Seuil de sous-utilisation (0.80 = 80%)</p>
         </div>
 
-        <div class="grid gap-2">
-          <Label for="overutilization">{{
-            t('settings.constraints.fields.overutilization')
-          }}</Label>
-          <Input
-            id="overutilization"
+        <div class="grid gap-1.5">
+          <FloatingInput
             v-model.number="formData.overutilizationThreshold"
+            :label="t('settings.constraints.fields.overutilization')"
             type="number"
-            step="0.01"
             min="1"
             :disabled="isSaving"
           />
-          <p class="text-sm text-gray-500">Seuil de sur-utilisation (1.20 = 120%)</p>
+          <p class="text-xs text-gray-400">Seuil de sur-utilisation (1.20 = 120%)</p>
         </div>
 
-        <div class="grid gap-2">
-          <Label for="wastedTime">{{ t('settings.constraints.fields.wastedTime') }}</Label>
-          <Input
-            id="wastedTime"
+        <div class="grid gap-1.5">
+          <FloatingInput
             v-model.number="formData.wastedTimeThreshold"
+            :label="t('settings.constraints.fields.wastedTime')"
             type="number"
-            step="0.5"
             min="0"
             :disabled="isSaving"
           />
-          <p class="text-sm text-gray-500">Seuil de temps perdu (en heures)</p>
+          <p class="text-xs text-gray-400">Seuil de temps perdu (en heures)</p>
         </div>
       </div>
 
