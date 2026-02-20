@@ -6,6 +6,7 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user
+from app.core.config import settings
 from app.db.session import get_db
 from app.exceptions import BadRequestError
 from app.models.user import User
@@ -98,7 +99,7 @@ async def logout(
         key="refresh_token",
         path="/api/v1",
         httponly=True,
-        secure=False,
+        secure=settings.is_production,
         samesite="lax",
     )
 

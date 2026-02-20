@@ -87,7 +87,7 @@ class AuthService:
             key="refresh_token",
             value=refresh_token_value,
             httponly=True,
-            secure=False,
+            secure=settings.is_production,
             samesite="lax",
             max_age=settings.REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60,
             path="/api/v1",

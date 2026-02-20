@@ -20,5 +20,9 @@ class Settings(BaseSettings):
 
     FRONTEND_URL: str = "http://localhost:5173"
 
+    @property
+    def is_production(self) -> bool:
+        return self.ENVIRONMENT == "production"
+
 
 settings = Settings()

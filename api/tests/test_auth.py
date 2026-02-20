@@ -1,4 +1,4 @@
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from httpx import ASGITransport, AsyncClient, Response
@@ -13,16 +13,13 @@ from app.main import app
 async def override_get_db():
     mock_session = AsyncMock(spec=AsyncSession)
 
-    mock_scalars = AsyncMock()
+    mock_scalars = MagicMock()
     mock_scalars.first.return_value = None
 
-    mock_result = AsyncMock()
+    mock_result = MagicMock()
     mock_result.scalars.return_value = mock_scalars
 
-    async def mock_execute(*args, **kwargs):
-        return mock_result
-
-    mock_session.execute = mock_execute
+    mock_session.execute = AsyncMock(return_value=mock_result)
     mock_session.commit = AsyncMock()
     mock_session.refresh = AsyncMock()
     mock_session.add = AsyncMock()
@@ -65,7 +62,7 @@ async def test_login_google_success(mock_google_response):
 
             assert response.status_code == 200
             data = response.json()
-            assert "token" in data
+            assert "access_token" in data
             assert "user" in data
             assert "id" in data["user"]
             assert "email" in data["user"]
