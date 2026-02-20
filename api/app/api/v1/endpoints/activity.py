@@ -3,10 +3,14 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.api.deps import get_current_user
 from app.db.session import get_db
+from app.models.activity import Activity
+from app.models.task import Task, TaskActivity
 from app.models.user import User
 from app.repositories.activity_repository import (
     ActivityRepository,
@@ -41,6 +45,46 @@ async def get_activity_service(
         constraints_repo=GlobalConstraintsRepository(db),
         activity_repo=ActivityRepository(db),
     )
+
+
+async def _enrich_with_task_info(
+    activities: list[Activity], db: AsyncSession
+) -> list[ActivityResponse]:
+    if not activities:
+        return []
+
+    activity_ids = [activity.id for activity in activities]
+
+    result = await db.execute(
+        select(TaskActivity).where(TaskActivity.activity_id.in_(activity_ids))
+    )
+    task_activity_links = {
+        link.activity_id: link.task_id for link in result.scalars().all()
+    }
+
+    task_ids = list(task_activity_links.values())
+    tasks_dict: dict[UUID, Task] = {}
+    if task_ids:
+        result = await db.execute(
+            select(Task).options(selectinload(Task.task_list)).where(Task.id.in_(task_ids))
+        )
+        tasks_dict = {task.id: task for task in result.scalars().all()}
+
+    enriched: list[ActivityResponse] = []
+    for activity in activities:
+        response = ActivityResponse.model_validate(activity)
+        task_id = task_activity_links.get(activity.id)
+        if task_id is not None:
+            task = tasks_dict.get(task_id)
+            if task is not None:
+                response.task_name = task.title
+                response.task_id = str(task.id)
+                response.is_from_task = True
+                if task.task_list is not None:
+                    response.task_list_color = task.task_list.color
+        enriched.append(response)
+
+    return enriched
 
 
 @router.get("/groups", response_model=list[GroupResponse])
@@ -157,27 +201,34 @@ async def update_global_constraints(
 @router.get("/activities", response_model=list[ActivityResponse])
 async def list_activities(
     service: Annotated[ActivityService, Depends(get_activity_service)],
+    db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    return await service.get_activities(current_user.id)
+    activities = await service.get_activities(current_user.id)
+    return await _enrich_with_task_info(activities, db)
 
 
 @router.get("/activities/date/{date}", response_model=list[ActivityResponse])
 async def list_activities_by_date(
     date: date_type,
     service: Annotated[ActivityService, Depends(get_activity_service)],
+    db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    return await service.get_activities_by_date(current_user.id, date)
+    activities = await service.get_activities_by_date(current_user.id, date)
+    return await _enrich_with_task_info(activities, db)
 
 
 @router.get("/activities/{id}", response_model=ActivityResponse)
 async def get_activity_by_id(
     id: UUID,
     service: Annotated[ActivityService, Depends(get_activity_service)],
+    db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
 ):
-    return await service.get_activity(id, current_user.id)
+    activity = await service.get_activity(id, current_user.id)
+    enriched_activities = await _enrich_with_task_info([activity], db)
+    return enriched_activities[0]
 
 
 @router.post(

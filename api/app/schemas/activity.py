@@ -170,3 +170,7 @@ class ActivityResponse(ActivityBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+    task_name: str | None = None
+    task_list_color: str | None = None
+    task_id: str | None = None
+    is_from_task: bool = False
