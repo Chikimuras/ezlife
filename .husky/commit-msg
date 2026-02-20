@@ -1,3 +1,4 @@
 #!/bin/sh
 
-cd api && uv run pre-commit run conventional-pre-commit --commit-msg-filename "$1" --hook-stage commit-msg
+COMMIT_MSG_FILE="$(pwd)/$1"
+cd api && uv run pre-commit run conventional-pre-commit --commit-msg-filename "$COMMIT_MSG_FILE" --hook-stage commit-msg

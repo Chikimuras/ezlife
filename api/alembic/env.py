@@ -1,4 +1,5 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import pool
@@ -8,7 +9,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from app.core.config import settings
 from app.db.session import Base
-from app.models.activity import Activity, Category, GlobalConstraints, Group  # noqa
+from app.models.activity import Activity, Category, Group  # noqa
 from app.models.refresh_token import RefreshToken  # noqa
 from app.models.task import Task, TaskActivity, TaskList  # noqa
 from app.models.user import User  # noqa
@@ -24,10 +25,10 @@ if config.config_file_name is not None:
 
 # Set the sqlalchemy.url dynamically from settings
 # But for Alembic running locally on host, we need localhost, not db
-# The settings.DATABASE_URL defaults to "postgresql+asyncpg://postgres:postgres@db:5432/app" which is for Docker
+# The settings.DATABASE_URL defaults to
+# "postgresql+asyncpg://postgres:postgres@db:5432/app" which is for Docker
 # If we run alembic from host, we need to replace "db" with "localhost"
 # We'll handle this by checking where we are running
-import os
 
 db_url = settings.DATABASE_URL
 # Check if running inside Docker (/.dockerenv exists in Docker containers)

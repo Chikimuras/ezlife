@@ -7,7 +7,6 @@ import TabsList from '@/components/ui/TabsList.vue'
 import TabsTrigger from '@/components/ui/TabsTrigger.vue'
 import CategoryManager from '@/components/features/CategoryManager.vue'
 import GroupManager from '@/components/features/GroupManager.vue'
-import GlobalConstraintsEditor from '@/components/features/GlobalConstraintsEditor.vue'
 import ActivityImporter from '@/components/features/ActivityImporter.vue'
 import { useI18n } from 'vue-i18n'
 
@@ -35,10 +34,9 @@ onUnmounted(() => {
       <h1 class="text-xl font-semibold mb-4">{{ t('settings.title') }}</h1>
 
       <tabs v-model="activeTab" class="w-full">
-        <tabs-list class="grid w-full grid-cols-4">
+        <tabs-list class="grid w-full grid-cols-3">
           <tabs-trigger value="categories">{{ t('settings.tabs.categories') }}</tabs-trigger>
           <tabs-trigger value="groups">{{ t('settings.tabs.groups') }}</tabs-trigger>
-          <tabs-trigger value="constraints">{{ t('settings.tabs.constraints') }}</tabs-trigger>
           <tabs-trigger value="import">{{ t('settings.tabs.import') }}</tabs-trigger>
         </tabs-list>
 
@@ -48,10 +46,6 @@ onUnmounted(() => {
 
         <tabs-content value="groups">
           <group-manager />
-        </tabs-content>
-
-        <tabs-content value="constraints">
-          <global-constraints-editor />
         </tabs-content>
 
         <tabs-content value="import">

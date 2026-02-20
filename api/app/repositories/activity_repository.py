@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.activity import Activity, Category, GlobalConstraints, Group
+from app.models.activity import Activity, Category, Group
 from app.repositories.user_repository import BaseRepository
 
 
@@ -71,27 +71,6 @@ class CategoryRepository(BaseRepository[Category]):
     async def delete(self, id: UUID) -> None:
         await self.session.execute(delete(Category).where(Category.id == id))
         await self.session.commit()
-
-
-class GlobalConstraintsRepository(BaseRepository[GlobalConstraints]):
-    def __init__(self, session: AsyncSession):
-        super().__init__(GlobalConstraints, session)
-
-    async def get_by_user(self, user_id: UUID) -> GlobalConstraints | None:
-        result = await self.session.execute(
-            select(GlobalConstraints).where(GlobalConstraints.user_id == user_id)
-        )
-        return result.scalars().first()
-
-    async def update(
-        self, db_obj: GlobalConstraints, obj_in_data: dict
-    ) -> GlobalConstraints:
-        for field, value in obj_in_data.items():
-            setattr(db_obj, field, value)
-        self.session.add(db_obj)
-        await self.session.commit()
-        await self.session.refresh(db_obj)
-        return db_obj
 
 
 class ActivityRepository(BaseRepository[Activity]):

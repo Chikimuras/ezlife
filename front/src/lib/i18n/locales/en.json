@@ -187,21 +187,6 @@
         "minutes": "Minutes"
       }
     },
-    "constraints": {
-      "fields": {
-        "minSleep": "Minimum Sleep Hours",
-        "overutilization": "Overutilization Threshold",
-        "totalWeekly": "Total Weekly Hours",
-        "underutilization": "Underutilization Threshold",
-        "wastedTime": "Wasted Time Threshold (h)"
-      },
-      "messages": {
-        "updateError": "Failed to update constraints",
-        "updated": "Constraints updated successfully"
-      },
-      "save": "Save Constraints",
-      "title": "Global Constraints"
-    },
     "groups": {
       "add": "Add Group",
       "confirmDelete": "Are you sure you want to delete this group?",
@@ -223,7 +208,6 @@
     },
     "tabs": {
       "categories": "Categories",
-      "constraints": "Global Constraints",
       "groups": "Groups",
       "import": "Import"
     },

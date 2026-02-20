@@ -10,7 +10,6 @@ from app.models.user import User
 from app.repositories.activity_repository import (
     ActivityRepository,
     CategoryRepository,
-    GlobalConstraintsRepository,
     GroupRepository,
 )
 from app.repositories.task_repository import (
@@ -37,9 +36,7 @@ router = APIRouter()
 
 def _to_task_response(task) -> TaskResponse:
     task_response = TaskResponse.model_validate(task)
-    task_response.activity_ids = [
-        ta.activity_id for ta in (task.task_activities or [])
-    ]
+    task_response.activity_ids = [ta.activity_id for ta in (task.task_activities or [])]
     return task_response
 
 
@@ -49,7 +46,6 @@ async def get_task_service(
     activity_service = ActivityService(
         group_repo=GroupRepository(db),
         category_repo=CategoryRepository(db),
-        constraints_repo=GlobalConstraintsRepository(db),
         activity_repo=ActivityRepository(db),
     )
     return TaskService(

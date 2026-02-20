@@ -42,7 +42,8 @@ def upgrade() -> None:
     )
     op.add_column("activities", sa.Column("user_id_uuid", sa.UUID(), nullable=True))
 
-    # Step 2: Populate UUID columns with generated values (for existing data - will be lost in dev)
+    # Step 2: Populate UUID columns with generated values
+    # (for existing data - will be lost in dev)
     # In production, you'd want to preserve mappings. For dev, we're starting fresh.
     op.execute("UPDATE users SET id_uuid = uuid_generate_v4()")
 

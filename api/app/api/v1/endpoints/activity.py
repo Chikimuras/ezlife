@@ -15,7 +15,6 @@ from app.models.user import User
 from app.repositories.activity_repository import (
     ActivityRepository,
     CategoryRepository,
-    GlobalConstraintsRepository,
     GroupRepository,
 )
 from app.schemas.activity import (
@@ -25,8 +24,6 @@ from app.schemas.activity import (
     CategoryCreate,
     CategoryResponse,
     CategoryUpdate,
-    GlobalConstraintsResponse,
-    GlobalConstraintsUpdate,
     GroupCreate,
     GroupResponse,
     GroupUpdate,
@@ -42,7 +39,6 @@ async def get_activity_service(
     return ActivityService(
         group_repo=GroupRepository(db),
         category_repo=CategoryRepository(db),
-        constraints_repo=GlobalConstraintsRepository(db),
         activity_repo=ActivityRepository(db),
     )
 
@@ -66,7 +62,9 @@ async def _enrich_with_task_info(
     tasks_dict: dict[UUID, Task] = {}
     if task_ids:
         result = await db.execute(
-            select(Task).options(selectinload(Task.task_list)).where(Task.id.in_(task_ids))
+            select(Task)
+            .options(selectinload(Task.task_list))
+            .where(Task.id.in_(task_ids))
         )
         tasks_dict = {task.id: task for task in result.scalars().all()}
 
@@ -179,23 +177,6 @@ async def delete_category(
     current_user: Annotated[User, Depends(get_current_user)],
 ):
     await service.delete_category(id, current_user.id)
-
-
-@router.get("/global-constraints", response_model=GlobalConstraintsResponse)
-async def get_global_constraints(
-    service: Annotated[ActivityService, Depends(get_activity_service)],
-    current_user: Annotated[User, Depends(get_current_user)],
-):
-    return await service.get_global_constraints(current_user.id)
-
-
-@router.patch("/global-constraints", response_model=GlobalConstraintsResponse)
-async def update_global_constraints(
-    data: GlobalConstraintsUpdate,
-    service: Annotated[ActivityService, Depends(get_activity_service)],
-    current_user: Annotated[User, Depends(get_current_user)],
-):
-    return await service.update_global_constraints(data, current_user.id)
 
 
 @router.get("/activities", response_model=list[ActivityResponse])

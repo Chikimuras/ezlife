@@ -119,16 +119,17 @@ async def test_insights_service():
 
         print("\n📊 Statistics:")
         stats = result["stats"]
-        print(
-            f"   Activities: {stats['activitiesCount']} (Δ {stats['activitiesCountDelta']})"
-        )
+        activities_delta = stats["activitiesCountDelta"]
+        print(f"   Activities: {stats['activitiesCount']} (Δ {activities_delta})")
         print(f"   Categories used: {stats['categoriesUsed']}")
         print(f"   Avg duration: {stats['averageActivityDuration']} min")
         if stats["longestActivity"]:
             longest = stats["longestActivity"]
+            start = longest["startTime"]
+            end = longest["endTime"]
             print(
                 f"   Longest: {longest['categoryName']} "
-                f"({longest['minutes']} min, {longest['startTime']}-{longest['endTime']})"
+                f"({longest['minutes']} min, {start}-{end})"
             )
 
         if result["productivity"]:

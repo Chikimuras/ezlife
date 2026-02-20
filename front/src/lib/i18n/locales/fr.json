@@ -187,21 +187,6 @@
         "minutes": "Minutes"
       }
     },
-    "constraints": {
-      "fields": {
-        "minSleep": "Heures Minimum Sommeil",
-        "overutilization": "Seuil Sur-utilisation",
-        "totalWeekly": "Heures Totales Semaine",
-        "underutilization": "Seuil Sous-utilisation",
-        "wastedTime": "Seuil Temps Perdu (h)"
-      },
-      "messages": {
-        "updateError": "Échec de la mise à jour des contraintes",
-        "updated": "Contraintes mises à jour avec succès"
-      },
-      "save": "Enregistrer les Contraintes",
-      "title": "Contraintes Globales"
-    },
     "groups": {
       "add": "Ajouter un Groupe",
       "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce groupe ?",
@@ -223,7 +208,6 @@
     },
     "tabs": {
       "categories": "Catégories",
-      "constraints": "Contraintes Globales",
       "groups": "Groupes",
       "import": "Import"
     },

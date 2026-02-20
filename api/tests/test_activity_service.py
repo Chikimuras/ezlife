@@ -1,5 +1,5 @@
 from datetime import date, time
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 
 import pytest
@@ -9,7 +9,6 @@ from app.exceptions import DependencyConflictError, NotFoundError
 from app.repositories.activity_repository import (
     ActivityRepository,
     CategoryRepository,
-    GlobalConstraintsRepository,
     GroupRepository,
 )
 from app.schemas.activity import (
@@ -17,7 +16,6 @@ from app.schemas.activity import (
     ActivityUpdate,
     CategoryCreate,
     CategoryUpdate,
-    GlobalConstraintsUpdate,
     GroupCreate,
     GroupUpdate,
 )
@@ -35,18 +33,13 @@ def category_repo():
 
 
 @pytest.fixture
-def constraints_repo():
-    return AsyncMock(spec=GlobalConstraintsRepository)
-
-
-@pytest.fixture
 def activity_repo():
     return AsyncMock(spec=ActivityRepository)
 
 
 @pytest.fixture
-def activity_service(group_repo, category_repo, constraints_repo, activity_repo):
-    return ActivityService(group_repo, category_repo, constraints_repo, activity_repo)
+def activity_service(group_repo, category_repo, activity_repo):
+    return ActivityService(group_repo, category_repo, activity_repo)
 
 
 @pytest.mark.asyncio
@@ -268,60 +261,6 @@ async def test_delete_category_deletes_category(activity_service, category_repo)
     await activity_service.delete_category(category_id, user_id)
 
     category_repo.delete.assert_awaited_once_with(category_id)
-
-
-@pytest.mark.asyncio
-async def test_get_global_constraints_returns_existing(
-    activity_service, constraints_repo
-):
-    user_id = uuid4()
-    constraints = MagicMock(id=uuid4(), user_id=user_id)
-    constraints_repo.get_by_user.return_value = constraints
-
-    result = await activity_service.get_global_constraints(user_id)
-
-    assert result == constraints
-    constraints_repo.create.assert_not_called()
-
-
-@pytest.mark.asyncio
-async def test_get_global_constraints_creates_defaults_when_missing(
-    activity_service, constraints_repo
-):
-    user_id = uuid4()
-    created = MagicMock(id=uuid4(), user_id=user_id)
-    constraints_repo.get_by_user.return_value = None
-    constraints_repo.create.return_value = created
-
-    result = await activity_service.get_global_constraints(user_id)
-
-    assert result == created
-    constraints_repo.create.assert_awaited_once_with(user_id=user_id)
-
-
-@pytest.mark.asyncio
-async def test_update_global_constraints_updates_constraints(
-    activity_service, constraints_repo
-):
-    user_id = uuid4()
-    constraints = MagicMock(id=uuid4(), user_id=user_id)
-    updated = MagicMock(id=constraints.id, user_id=user_id)
-    data = GlobalConstraintsUpdate(total_weekly_hours=160.0)
-    constraints_repo.update.return_value = updated
-
-    with patch.object(
-        activity_service,
-        "get_global_constraints",
-        AsyncMock(return_value=constraints),
-    ) as mock_get_global_constraints:
-        result = await activity_service.update_global_constraints(data, user_id)
-
-    assert result == updated
-    mock_get_global_constraints.assert_awaited_once_with(user_id)
-    constraints_repo.update.assert_awaited_once_with(
-        constraints,
-        {"total_weekly_hours": 160.0},
-    )
 
 
 @pytest.mark.asyncio

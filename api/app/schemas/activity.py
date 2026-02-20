@@ -81,28 +81,6 @@ class CategoryResponse(CategoryBase):
     updated_at: datetime
 
 
-class GlobalConstraintsBase(CamelModel):
-    total_weekly_hours: float = 168.0
-    min_sleep_hours: float = 56.0
-    underutilization_threshold: float = 0.8
-    overutilization_threshold: float = 1.2
-    wasted_time_threshold: float = 2.0
-
-
-class GlobalConstraintsUpdate(CamelModel):
-    total_weekly_hours: float | None = None
-    min_sleep_hours: float | None = None
-    underutilization_threshold: float | None = None
-    overutilization_threshold: float | None = None
-    wasted_time_threshold: float | None = None
-
-
-class GlobalConstraintsResponse(GlobalConstraintsBase):
-    id: UUID
-    created_at: datetime
-    updated_at: datetime
-
-
 class ActivityBase(CamelModel):
     date: date_type
     start_time: time

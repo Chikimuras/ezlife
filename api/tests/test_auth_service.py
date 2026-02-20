@@ -56,7 +56,8 @@ async def test_authenticate_google_user_success(auth_service, mock_google_respon
             mock_user.full_name = "Test User"
             auth_service.user_repo.create = AsyncMock(return_value=mock_user)
 
-            with patch("app.services.auth_service.create_refresh_token_db") as mock_create_token:
+            patch_path = "app.services.auth_service.create_refresh_token_db"
+            with patch(patch_path) as mock_create_token:
                 mock_create_token.return_value = "fake-refresh-token"
 
                 mock_response = Response()

@@ -34,4 +34,6 @@ class RefreshToken(Base):
     )
     revoked: Mapped[bool] = mapped_column(Boolean, default=False)
 
-    user: Mapped["User"] = relationship("User", back_populates="refresh_tokens")  # noqa: F821
+    user: Mapped["User"] = relationship(
+        "User", back_populates="refresh_tokens"
+    )  # noqa: F821

@@ -5,11 +5,10 @@ from loguru import logger
 from sqlalchemy.exc import IntegrityError
 
 from app.exceptions import DependencyConflictError, NotFoundError
-from app.models.activity import Activity, Category, GlobalConstraints, Group
+from app.models.activity import Activity, Category, Group
 from app.repositories.activity_repository import (
     ActivityRepository,
     CategoryRepository,
-    GlobalConstraintsRepository,
     GroupRepository,
 )
 from app.schemas.activity import (
@@ -17,7 +16,6 @@ from app.schemas.activity import (
     ActivityUpdate,
     CategoryCreate,
     CategoryUpdate,
-    GlobalConstraintsUpdate,
     GroupCreate,
     GroupUpdate,
 )
@@ -28,12 +26,10 @@ class ActivityService:
         self,
         group_repo: GroupRepository,
         category_repo: CategoryRepository,
-        constraints_repo: GlobalConstraintsRepository,
         activity_repo: ActivityRepository,
     ):
         self.group_repo = group_repo
         self.category_repo = category_repo
-        self.constraints_repo = constraints_repo
         self.activity_repo = activity_repo
 
     async def get_groups(self, user_id: UUID) -> list[Group]:
@@ -122,27 +118,6 @@ class ActivityService:
         await self.get_category(id, user_id)
         await self.category_repo.delete(id)
         logger.success(f"Category deleted: id={id}")
-
-    async def get_global_constraints(self, user_id: UUID) -> GlobalConstraints:
-        logger.debug(f"Fetching global constraints for user_id={user_id}")
-        constraints = await self.constraints_repo.get_by_user(user_id)
-        if not constraints:
-            logger.info(
-                f"No constraints found, creating defaults for user_id={user_id}"
-            )
-            constraints = await self.constraints_repo.create(user_id=user_id)
-        return constraints
-
-    async def update_global_constraints(
-        self, data: GlobalConstraintsUpdate, user_id: UUID
-    ) -> GlobalConstraints:
-        logger.info(f"Updating global constraints for user_id={user_id}")
-        constraints = await self.get_global_constraints(user_id)
-        updated = await self.constraints_repo.update(
-            constraints, data.model_dump(exclude_unset=True)
-        )
-        logger.success(f"Global constraints updated for user_id={user_id}")
-        return updated
 
     async def get_activities(self, user_id: UUID) -> list[Activity]:
         logger.debug(f"Fetching all activities for user_id={user_id}")
