@@ -4,7 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import SettingsView from '../views/SettingsView.vue'
 import ActivitiesView from '../views/ActivitiesView.vue'
-import ImportView from '../views/ImportView.vue'
+import TasksView from '../views/TasksView.vue'
 import { useAuthStore } from '../stores/auth'
 
 const router = createRouter({
@@ -35,9 +35,9 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/import',
-      name: 'import',
-      component: ImportView,
+      path: '/tasks',
+      name: 'tasks',
+      component: TasksView,
       meta: { requiresAuth: true },
     },
     {

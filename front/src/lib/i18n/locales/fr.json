@@ -224,7 +224,8 @@
     "tabs": {
       "categories": "Catégories",
       "constraints": "Contraintes Globales",
-      "groups": "Groupes"
+      "groups": "Groupes",
+      "import": "Import"
     },
     "title": "Paramètres"
   },
@@ -278,6 +279,121 @@
       "details": "Détails de l'erreur",
       "showDetails": "Afficher les détails techniques",
       "hideDetails": "Masquer les détails techniques"
+    }
+  },
+  "tasks": {
+    "title": "Tâches",
+    "taskLists": "Listes de tâches",
+    "allTasks": "Toutes les tâches",
+    "newList": "Nouvelle liste",
+    "newTask": "Nouvelle tâche",
+    "editTask": "Modifier la tâche",
+    "editList": "Modifier la liste",
+    "deleteList": "Supprimer la liste",
+    "deleteTask": "Supprimer la tâche",
+    "listName": "Nom de la liste",
+    "taskTitle": "Titre",
+    "description": "Description",
+    "priority": "Priorité",
+    "dueDate": "Date d'échéance",
+    "scheduledDate": "Date planifiée",
+    "startsFrom": "À partir du",
+    "scheduledTime": "Horaire planifié",
+    "estimatedDuration": "Durée estimée",
+    "category": "Catégorie",
+    "status": "Statut",
+    "noTasks": "Aucune tâche",
+    "views": {
+      "today": "Aujourd'hui",
+      "week": "Semaine",
+      "all": "Tout"
+    },
+    "noTasksDescription": "Créez votre première tâche pour commencer",
+    "noLists": "Aucune liste",
+    "noListsDescription": "Créez une liste pour organiser vos tâches",
+    "complete": "Terminer",
+    "addToTracker": "Ajouter au tracker",
+    "convertToActivity": "Convertir en activité",
+    "markAsDone": "Marquer comme fait",
+    "priorities": {
+      "low": "Basse",
+      "medium": "Moyenne",
+      "high": "Haute",
+      "urgent": "Urgente"
+    },
+    "statuses": {
+      "todo": "À faire",
+      "in_progress": "En cours",
+      "done": "Fait"
+    },
+    "completeDialog": {
+      "title": "Terminer la tâche",
+      "addToTrackerQuestion": "Ajouter cette tâche au tracker d'activités ?",
+      "date": "Date",
+      "startTime": "Heure de début",
+      "endTime": "Heure de fin",
+      "notes": "Notes"
+    },
+    "convertDialog": {
+      "title": "Ajouter au tracker d'activités",
+      "description": "Enregistrez quand vous avez travaillé sur cette tâche"
+    },
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette tâche ?",
+    "confirmDeleteList": "Êtes-vous sûr de vouloir supprimer cette liste et toutes ses tâches ?",
+    "minutes": "min",
+    "color": "Couleur",
+    "icon": "Icône",
+    "recurrence": {
+      "label": "Récurrence",
+      "frequency": "Fréquence",
+      "interval": "Tous les",
+      "frequencies": {
+        "none": "Pas de répétition",
+        "daily": "Quotidien",
+        "weekly": "Hebdomadaire",
+        "monthly": "Mensuel",
+        "yearly": "Annuel"
+      },
+      "days": {
+        "mo": "Lun",
+        "tu": "Mar",
+        "we": "Mer",
+        "th": "Jeu",
+        "fr": "Ven",
+        "sa": "Sam",
+        "su": "Dim"
+      },
+      "monthly": {
+        "onDay": "Le jour",
+        "onThe": "Le",
+        "positions": {
+          "1": "1er",
+          "2": "2ème",
+          "3": "3ème",
+          "4": "4ème",
+          "-1": "Dernier"
+        }
+      },
+      "yearly": {
+        "months": "En",
+        "onDay": "Le jour"
+      },
+      "end": {
+        "label": "Fin",
+        "never": "Jamais",
+        "after": "Après",
+        "until": "Jusqu'au",
+        "occurrences": "occurrences"
+      },
+      "exceptions": {
+        "label": "Exclure des dates",
+        "add": "Ajouter une exception",
+        "noExceptions": "Aucune date exclue"
+      },
+      "preview": {
+        "label": "Prochaines occurrences",
+        "noPreview": "Configurez la récurrence pour voir l'aperçu"
+      }
     }
   }
 }
