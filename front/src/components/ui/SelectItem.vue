@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, type Ref } from 'vue'
+import { computed, inject, onMounted, ref, type Ref } from 'vue'
 import { cn } from '@/lib/utils/cn'
 
 interface Props {
@@ -10,19 +10,32 @@ interface Props {
 const props = defineProps<Props>()
 
 const selectedValue = inject<Ref<string>>('selectValue')
-const selectItem = inject<(value: string) => void>('selectItem')
+const selectItem = inject<(value: string, label?: string) => void>('selectItem')
+const registerLabel = inject<(value: string, label: string) => void>('registerLabel')
 
+const itemRef = ref<HTMLElement>()
 const isSelected = computed(() => selectedValue?.value === props.value)
+
+const getLabel = (): string => {
+  return itemRef.value?.textContent?.trim() ?? props.value
+}
+
+onMounted(() => {
+  if (registerLabel) {
+    registerLabel(props.value, getLabel())
+  }
+})
 
 const handleClick = () => {
   if (selectItem) {
-    selectItem(props.value)
+    selectItem(props.value, getLabel())
   }
 }
 </script>
 
 <template>
   <div
+    ref="itemRef"
     :class="
       cn(
         'relative flex w-full cursor-pointer select-none items-center rounded-lg px-3 py-1.5 text-sm outline-none transition-colors hover:bg-primary-50 focus:bg-primary-50',

@@ -14,7 +14,7 @@ const isSelectOpen = computed(() => isOpen?.value === true)
 
 <template>
   <div
-    v-if="isSelectOpen"
+    v-show="isSelectOpen"
     :class="
       cn(
         'absolute z-50 mt-2 max-h-96 w-full overflow-auto rounded-xl border border-gray-100 bg-white shadow-xl',

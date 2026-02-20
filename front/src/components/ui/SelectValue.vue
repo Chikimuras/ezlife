@@ -8,8 +8,13 @@ interface Props {
 const props = defineProps<Props>()
 
 const selectedValue = inject<Ref<string>>('selectValue')
+const selectedLabel = inject<Ref<string>>('selectLabel')
 
-const displayValue = computed(() => selectedValue?.value || props.placeholder || 'Select...')
+const displayValue = computed(() => {
+  if (selectedLabel?.value) return selectedLabel.value
+  if (selectedValue?.value) return selectedValue.value
+  return props.placeholder || 'Select...'
+})
 </script>
 
 <template>

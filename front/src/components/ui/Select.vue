@@ -11,13 +11,16 @@ const emit = defineEmits<{
 }>()
 
 const selectedValue = ref(props.modelValue ?? '')
+const selectedLabel = ref('')
 const isOpen = ref(false)
+const labelMap = ref<Map<string, string>>(new Map())
 
 watch(
   () => props.modelValue,
   (newVal) => {
     if (newVal !== undefined) {
       selectedValue.value = newVal
+      selectedLabel.value = labelMap.value.get(newVal) ?? ''
     }
   },
 )
@@ -27,10 +30,21 @@ watch(selectedValue, (newVal) => {
 })
 
 provide('selectValue', selectedValue)
+provide('selectLabel', selectedLabel)
 provide('selectOpen', isOpen)
 
-const selectItem = (value: string) => {
+const registerLabel = (value: string, label: string) => {
+  labelMap.value.set(value, label)
+  if (value === selectedValue.value && !selectedLabel.value) {
+    selectedLabel.value = label
+  }
+}
+
+provide('registerLabel', registerLabel)
+
+const selectItem = (value: string, label?: string) => {
   selectedValue.value = value
+  selectedLabel.value = label ?? labelMap.value.get(value) ?? value
   isOpen.value = false
 }
 
