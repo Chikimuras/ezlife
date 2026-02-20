@@ -21,7 +21,7 @@ const emit = defineEmits<{
 
 const inputClass = computed(() =>
   cn(
-    'w-full px-3 py-2 border border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all disabled:cursor-not-allowed disabled:opacity-50',
+    'w-full px-3 py-2 border border-gray-200 rounded-lg text-gray-900 placeholder:text-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all disabled:cursor-not-allowed disabled:opacity-50 peer',
     props.class,
   ),
 )
@@ -33,7 +33,7 @@ const inputClass = computed(() =>
     :type="type"
     :value="modelValue"
     :disabled="disabled"
-    :placeholder="placeholder"
+    :placeholder="placeholder ?? ' '"
     @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
   />
 </template>
