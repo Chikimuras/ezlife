@@ -117,7 +117,7 @@ async def test_insights_service():
                 f"({cat['percentOfTotal']}% of total)"
             )
 
-        print(f"\n📊 Statistics:")
+        print("\n📊 Statistics:")
         stats = result["stats"]
         print(
             f"   Activities: {stats['activitiesCount']} (Δ {stats['activitiesCountDelta']})"
@@ -133,7 +133,7 @@ async def test_insights_service():
 
         if result["productivity"]:
             prod = result["productivity"]
-            print(f"\n⚡ Productivity:")
+            print("\n⚡ Productivity:")
             print(
                 f"   Mandatory time: {prod['mandatoryMinutes']} min "
                 f"({prod['mandatoryPercentOfTotal']}%)"

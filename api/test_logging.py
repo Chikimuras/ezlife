@@ -2,8 +2,10 @@
 """Script to test logging system with various error scenarios."""
 
 import asyncio
-import httpx
 from datetime import timedelta
+
+import httpx
+
 from app.core.security import create_access_token
 
 
