@@ -245,7 +245,7 @@ const handleDragStart = (activity: Activity, event: MouseEvent) => {
     if (!hasMoved.value) return
 
     const actualDeltaY = e.clientY - dragStartY.value
-    let newTopRaw = Math.max(0, Math.min(1440 - 30, dragStartTop.value + actualDeltaY))
+    const newTopRaw = Math.max(0, Math.min(1440 - 30, dragStartTop.value + actualDeltaY))
 
     const newTopSnapped = snapToInterval(newTopRaw, 15)
 
@@ -587,12 +587,19 @@ const getActivityStyle = (activity: (typeof activitiesStore.activities)[0]) => {
   return {
     top: `${top}px`,
     height: `${height}px`,
-    backgroundColor: getCategoryColor(activity.categoryId),
+    backgroundColor: activity.isFromTask && activity.taskListColor ? activity.taskListColor : getCategoryColor(activity.categoryId),
   }
 }
 
 const getCategoryName = (categoryId: string): string => {
   return categoriesStore.categories.find((c) => c.id === categoryId)?.name ?? ''
+}
+
+const getActivityDisplayName = (activity: Activity): string => {
+  if (activity.isFromTask && activity.taskName) {
+    return activity.taskName
+  }
+  return getCategoryName(activity.categoryId)
 }
 
 const snapToInterval = (minutes: number, snapInterval: number = 15): number => {
@@ -787,7 +794,23 @@ const getHoveredActivity = computed(() => {
                     </div>
 
                     <template v-if="shouldShowText(activity)">
-                      <div class="font-semibold">{{ getCategoryName(activity.categoryId) }}</div>
+                      <div class="font-semibold flex items-center gap-1.5">
+                        <svg v-if="activity.isFromTask" class="w-3 h-3 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="truncate">{{ getActivityDisplayName(activity) }}</span>
+                      </div>
+                      <div v-if="activity.isFromTask" class="flex items-center gap-1 mt-0.5">
+                        <span 
+                          class="inline-flex items-center px-1.5 py-0 rounded-full text-[10px] font-medium"
+                          :style="{ 
+                            backgroundColor: getCategoryColor(activity.categoryId) + '33', 
+                            color: getCategoryColor(activity.categoryId) 
+                          }"
+                        >
+                          {{ getCategoryName(activity.categoryId) }}
+                        </span>
+                      </div>
                       <div class="text-xs opacity-90">
                         {{ activity.startTime }} - {{ activity.endTime }}
                       </div>
@@ -883,8 +906,11 @@ const getHoveredActivity = computed(() => {
                         </div>
 
                         <template v-if="shouldShowText(activity)">
-                          <div class="font-semibold text-xs leading-tight truncate">
-                            {{ getCategoryName(activity.categoryId) }}
+                          <div class="font-semibold text-xs leading-tight truncate flex items-center gap-1">
+                            <svg v-if="activity.isFromTask" class="w-2.5 h-2.5 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="truncate">{{ getActivityDisplayName(activity) }}</span>
                           </div>
                           <div class="text-xs opacity-90 truncate">
                             {{ activity.startTime }}
@@ -941,8 +967,22 @@ const getHoveredActivity = computed(() => {
             class="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-lg max-w-xs whitespace-normal"
           >
             <div class="space-y-1">
-              <div class="font-semibold">
-                {{ getCategoryName(getHoveredActivity.categoryId) }}
+              <div class="font-semibold flex items-center gap-1.5">
+                <svg v-if="getHoveredActivity.isFromTask" class="w-3 h-3 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {{ getActivityDisplayName(getHoveredActivity) }}
+              </div>
+              <div v-if="getHoveredActivity.isFromTask" class="text-xs opacity-80">
+                <span
+                  class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium"
+                  :style="{
+                    backgroundColor: getCategoryColor(getHoveredActivity.categoryId) + '33',
+                    color: getCategoryColor(getHoveredActivity.categoryId)
+                  }"
+                >
+                  {{ getCategoryName(getHoveredActivity.categoryId) }}
+                </span>
               </div>
               <div class="text-xs opacity-90">
                 {{ getHoveredActivity.startTime }} - {{ getHoveredActivity.endTime }}

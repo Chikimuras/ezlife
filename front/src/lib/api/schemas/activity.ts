@@ -27,6 +27,10 @@ export const ActivitySchema = z.object({
   startTime: timeString,
   endTime: timeString,
   categoryId: z.string().uuid(),
+  taskName: z.string().nullable().optional(),
+  taskListColor: z.string().nullable().optional(),
+  taskId: z.string().uuid().nullable().optional(),
+  isFromTask: z.boolean().default(false),
   notes: z
     .string()
     .nullable()
@@ -41,6 +45,8 @@ export const CreateActivitySchema = z.object({
   endTime: z.string().regex(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/),
   categoryId: z.string().uuid(),
   notes: z.string().optional(),
+  taskId: z.string().uuid().nullable().optional(),
+  isFromTask: z.boolean().optional(),
 })
 
 export const UpdateActivitySchema = CreateActivitySchema.partial()
