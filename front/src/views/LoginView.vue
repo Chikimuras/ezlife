@@ -14,7 +14,7 @@ const callback: CallbackTypes.CredentialCallback = async (response) => {
   if (response.credential) {
     try {
       await authStore.loginWithGoogle(response.credential)
-      await router.push('/dashboard')
+      await router.push('/activities')
     } catch (error) {
       console.error('Login failed', error)
     }

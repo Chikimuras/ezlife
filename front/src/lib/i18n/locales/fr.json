@@ -14,7 +14,8 @@
     "dismiss": "Ignorer",
     "contactSupport": "Contacter le Support",
     "goBack": "Retour",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "noData": "Aucune donnée disponible"
   },
   "landing": {
     "features": {
@@ -83,6 +84,20 @@
       "deleted": "Activité supprimée avec succès",
       "deleteError": "Échec de la suppression de l'activité",
       "conflictError": "Conflit horaire avec une autre activité"
+    },
+    "timer": {
+      "title": "Activité en cours",
+      "startButton": "Démarrer une activité",
+      "stop": "Arrêter",
+      "yes": "Oui",
+      "finishNow": "Terminer maintenant",
+      "finishAt": "Terminée à",
+      "categoryUnavailable": "Catégorie indisponible",
+      "selectCategory": "Sélectionner une catégorie",
+      "startCategory": "Démarrer",
+      "elapsed": "Temps écoulé",
+      "running": "En cours",
+      "blockedCreation": "Impossible d'ajouter une activité pendant qu'un minuteur est en cours"
     }
   },
   "import": {

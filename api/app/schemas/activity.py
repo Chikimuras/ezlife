@@ -6,7 +6,7 @@ from datetime import datetime, time
 from typing import Literal
 from uuid import UUID
 
-from pydantic import field_validator
+from pydantic import ValidationInfo, field_validator
 
 from app.schemas.base import CamelModel
 
@@ -84,13 +84,15 @@ class CategoryResponse(CategoryBase):
 class ActivityBase(CamelModel):
     date: date_type
     start_time: time
-    end_time: time
+    end_time: time | None = None
     category_id: UUID
     notes: str | None = None
 
     @field_validator("start_time", "end_time", mode="before")
     @classmethod
-    def validate_time_format(cls, v):
+    def validate_time_format(cls, v: str | time | None) -> time | None:
+        if v is None:
+            return v
         if isinstance(v, time):
             return v
         if isinstance(v, str):
@@ -100,16 +102,18 @@ class ActivityBase(CamelModel):
             return time(int(hours), int(minutes))
         return v
 
+
+class ActivityCreate(ActivityBase):
     @field_validator("end_time")
     @classmethod
-    def validate_end_time_after_start(cls, v, info):
+    def validate_end_time_after_start(
+        cls, v: time | None, info: ValidationInfo
+    ) -> time | None:
+        if v is None:
+            return v
         if "start_time" in info.data and info.data["start_time"] >= v:
             raise ValueError("end_time must be after start_time")
         return v
-
-
-class ActivityCreate(ActivityBase):
-    pass
 
 
 class ActivityUpdate(CamelModel):

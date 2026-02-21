@@ -25,7 +25,7 @@ export const ActivitySchema = z.object({
   id: z.string().uuid(),
   date: z.string().date(),
   startTime: timeString,
-  endTime: timeString,
+  endTime: timeString.nullable(),
   categoryId: z.string().uuid(),
   taskName: z.string().nullable().optional(),
   taskListColor: z.string().nullable().optional(),
@@ -42,7 +42,10 @@ export const ActivitySchema = z.object({
 export const CreateActivitySchema = z.object({
   date: z.string().date(),
   startTime: z.string().regex(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/),
-  endTime: z.string().regex(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/),
+  endTime: z
+    .string()
+    .regex(/^([0-1][0-9]|2[0-3]):[0-5][0-9]$/)
+    .optional(),
   categoryId: z.string().uuid(),
   notes: z.string().optional(),
   taskId: z.string().uuid().nullable().optional(),

@@ -68,7 +68,7 @@ router.beforeEach(async (to, _from, next) => {
 
     next()
   } else if (to.name === 'login' && authStore.isAuthenticated) {
-    next({ name: 'dashboard' })
+    next({ name: 'activities' })
   } else {
     next()
   }
