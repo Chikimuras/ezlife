@@ -13,6 +13,7 @@ from app.models.activity import Activity, Category, Group  # noqa
 from app.models.refresh_token import RefreshToken  # noqa
 from app.models.task import Task, TaskActivity, TaskList  # noqa
 from app.models.user import User  # noqa
+from app.models.webauthn_credential import WebAuthnCredential  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

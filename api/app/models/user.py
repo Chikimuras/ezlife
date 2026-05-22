@@ -11,6 +11,7 @@ from app.db.session import Base
 
 if TYPE_CHECKING:
     from app.models.refresh_token import RefreshToken
+    from app.models.webauthn_credential import WebAuthnCredential
 
 
 class User(Base):
@@ -32,4 +33,7 @@ class User(Base):
 
     refresh_tokens: Mapped[list["RefreshToken"]] = relationship(
         "RefreshToken", back_populates="user", cascade="all, delete-orphan"
+    )
+    webauthn_credentials: Mapped[list["WebAuthnCredential"]] = relationship(
+        "WebAuthnCredential", back_populates="user", cascade="all, delete-orphan"
     )

@@ -2,7 +2,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_ignore_empty=True)
+    model_config = SettingsConfigDict(
+        env_file=".env", env_ignore_empty=True, extra="ignore"
+    )
 
     PROJECT_NAME: str = "Mon Vrai Projet"
     API_V1_STR: str = "/api/v1"
@@ -15,8 +17,10 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
-    GOOGLE_CLIENT_ID: str = ""
-    GOOGLE_CLIENT_SECRET: str = ""
+    WEBAUTHN_RP_ID: str = "localhost"
+    WEBAUTHN_RP_NAME: str = "ezlife"
+    WEBAUTHN_EXPECTED_ORIGIN: str = "http://localhost:5173"
+    WEBAUTHN_CHALLENGE_TTL_SECONDS: int = 300
 
     FRONTEND_URL: str = "http://localhost:5173"
 
