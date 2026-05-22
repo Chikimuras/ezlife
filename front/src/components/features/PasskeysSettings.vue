@@ -135,7 +135,7 @@ onMounted(() => {
       {{ t('settings.passkeys.empty') }}
     </div>
 
-    <table v-else class="w-full">
+    <Table v-else class="w-full">
       <table-header>
         <table-row>
           <table-head>{{ t('settings.passkeys.columns.device') }}</table-head>
@@ -156,9 +156,7 @@ onMounted(() => {
               type="button"
               class="px-3 py-1.5 text-sm font-medium text-white bg-red-500 hover:bg-red-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-md shadow-sm hover:shadow transition-colors"
               :disabled="passkeys.length <= 1"
-              :title="
-                passkeys.length <= 1 ? t('settings.passkeys.lastOneTooltip') : ''
-              "
+              :title="passkeys.length <= 1 ? t('settings.passkeys.lastOneTooltip') : ''"
               @click="openDeleteDialog(passkey)"
             >
               {{ t('common.delete') }}
@@ -166,7 +164,7 @@ onMounted(() => {
           </table-cell>
         </table-row>
       </table-body>
-    </table>
+    </Table>
 
     <Dialog v-model:open="isDeleteDialogOpen">
       <DialogContent>
