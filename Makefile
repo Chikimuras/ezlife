@@ -3,7 +3,7 @@
 dev:
 	docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml up --build -d
 	@echo ""
-	@echo "  → https://local.ezlife.com"
+	@echo "  → https://local.ezlife.com:8443"
 	@echo "  → Traefik dashboard: http://localhost:8080"
 	@echo ""
 
