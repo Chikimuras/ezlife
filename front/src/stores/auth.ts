@@ -53,7 +53,8 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       isLoading.value = true
       error.value = null
-      const options = (await authApi.getLoginOptions()) as PublicKeyCredentialRequestOptionsJSON
+      const options =
+        (await authApi.getLoginOptions()) as unknown as PublicKeyCredentialRequestOptionsJSON
       const credential = await startAuthentication({ optionsJSON: options })
       const response = await authApi.verifyLogin(credential)
       setAuth(response.accessToken, response.user)
@@ -77,7 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
       const options = (await authApi.getRegisterOptions(
         payload.email,
         payload.name,
-      )) as PublicKeyCredentialCreationOptionsJSON
+      )) as unknown as PublicKeyCredentialCreationOptionsJSON
       const credential = await startRegistration({ optionsJSON: options })
       const response = await authApi.verifyRegistration(credential)
       setAuth(response.accessToken, response.user)

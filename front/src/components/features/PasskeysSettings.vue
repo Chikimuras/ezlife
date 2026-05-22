@@ -54,7 +54,8 @@ const fetchPasskeys = async () => {
 const addPasskey = async () => {
   isAdding.value = true
   try {
-    const options = (await authApi.getAddPasskeyOptions()) as PublicKeyCredentialCreationOptionsJSON
+    const options =
+      (await authApi.getAddPasskeyOptions()) as unknown as PublicKeyCredentialCreationOptionsJSON
     const credential = await startRegistration({ optionsJSON: options })
     await authApi.verifyAddPasskey(credential)
     success(t('settings.passkeys.messages.added'))
