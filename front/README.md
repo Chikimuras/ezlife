@@ -73,7 +73,6 @@ Créez un fichier `.env` à la racine du projet :
 
 ```env
 VITE_API_BASE_URL=https://your-api-url.com
-VITE_GOOGLE_CLIENT_ID=your-google-client-id
 ```
 
 ### Développement

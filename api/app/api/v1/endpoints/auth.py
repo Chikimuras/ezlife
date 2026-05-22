@@ -44,21 +44,6 @@ class LogoutResponse(BaseModel):
     message: str
 
 
-class GoogleToken(BaseModel):
-    token: str
-
-
-@router.post("/login/google", response_model=LoginResponse)
-async def login_google(
-    token_data: GoogleToken,
-    response: Response,
-    db: Annotated[AsyncSession, Depends(get_db)],
-):
-    user_repo = UserRepository(db)
-    auth_service = AuthService(user_repo)
-    return await auth_service.authenticate_google_user(token_data.token, response)
-
-
 @router.post("/auth/refresh", response_model=RefreshResponse)
 async def refresh_token(
     db: Annotated[AsyncSession, Depends(get_db)],
