@@ -10,7 +10,10 @@ const routerPushMock = vi.fn()
 
 vi.mock('@/lib/api/auth', () => ({
   authApi: {
-    loginWithGoogle: vi.fn(),
+    getLoginOptions: vi.fn(),
+    verifyLogin: vi.fn(),
+    getRegisterOptions: vi.fn(),
+    verifyRegistration: vi.fn(),
     me: vi.fn(),
     refresh: vi.fn(),
     logout: vi.fn(),

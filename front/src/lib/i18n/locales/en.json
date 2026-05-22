@@ -41,11 +41,28 @@
     }
   },
   "login": {
-    "googleButton": "Continue with Google",
+    "passkeyButton": "Sign in with a passkey",
+    "signingIn": "Signing in...",
+    "error": "Sign-in failed. Please try again.",
     "noAccount": "Don't have an account?",
     "signUp": "Sign up",
     "subtitle": "Sign in to continue tracking your activities",
     "title": "Welcome Back"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Create a passkey to get started",
+    "submit": "Create my account",
+    "submitting": "Creating account...",
+    "error": "Registration failed. Please try again.",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "fields": {
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "name": "Name",
+      "namePlaceholder": "Your name"
+    }
   },
   "nav": {
     "activities": "Activities",

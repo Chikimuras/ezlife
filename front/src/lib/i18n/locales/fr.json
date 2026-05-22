@@ -41,11 +41,28 @@
     }
   },
   "login": {
-    "googleButton": "Continuer avec Google",
+    "passkeyButton": "Se connecter avec une passkey",
+    "signingIn": "Connexion en cours...",
+    "error": "La connexion a échoué. Veuillez réessayer.",
     "noAccount": "Pas de compte ?",
     "signUp": "S'inscrire",
     "subtitle": "Connectez-vous pour continuer à suivre vos activités",
     "title": "Bon Retour"
+  },
+  "register": {
+    "title": "Créer votre compte",
+    "subtitle": "Créez une passkey pour commencer",
+    "submit": "Créer mon compte",
+    "submitting": "Création en cours...",
+    "error": "L'inscription a échoué. Veuillez réessayer.",
+    "haveAccount": "Vous avez déjà un compte ?",
+    "signIn": "Se connecter",
+    "fields": {
+      "email": "Email",
+      "emailPlaceholder": "vous@exemple.com",
+      "name": "Nom",
+      "namePlaceholder": "Votre nom"
+    }
   },
   "nav": {
     "activities": "Activités",

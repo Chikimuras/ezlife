@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { GoogleLogin } from 'vue3-google-login'
-import type { CallbackTypes } from 'vue3-google-login'
 import { useAuthStore } from '@/stores/auth'
 import PublicLayout from '@/components/layouts/PublicLayout.vue'
 
@@ -10,20 +9,30 @@ const router = useRouter()
 const authStore = useAuthStore()
 const { t } = useI18n()
 
-const callback: CallbackTypes.CredentialCallback = async (response) => {
-  if (response.credential) {
-    try {
-      await authStore.loginWithGoogle(response.credential)
-      await router.push('/activities')
-    } catch (error) {
-      console.error('Login failed', error)
-    }
+
+const isSubmitting = ref(false)
+const localError = ref<string | null>(null)
+
+const handleLogin = async () => {
+  isSubmitting.value = true
+  localError.value = null
+  try {
+    await authStore.loginWithPasskey()
+    await router.push('/dashboard')
+  } catch {
+    localError.value = t('login.error')
+  } finally {
+    isSubmitting.value = false
   }
+}
+
+const goToRegister = async () => {
+  await router.push('/register')
 }
 </script>
 
 <template>
-  <PublicLayout>
+  <public-layout>
     <div
       class="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 sm:px-4 lg:px-4"
     >
@@ -49,7 +58,7 @@ const callback: CallbackTypes.CredentialCallback = async (response) => {
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
                 </svg>
               </div>
@@ -62,9 +71,21 @@ const callback: CallbackTypes.CredentialCallback = async (response) => {
             </div>
 
             <div class="space-y-6">
-              <div class="flex justify-center">
-                <GoogleLogin :callback="callback" />
-              </div>
+              <button
+                :disabled="isSubmitting"
+                class="w-full px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 disabled:opacity-60 disabled:cursor-not-allowed rounded-lg shadow-sm hover:shadow transition-colors"
+                @click="handleLogin"
+              >
+                {{ isSubmitting ? t('login.signingIn') : t('login.passkeyButton') }}
+              </button>
+
+              <p
+                v-if="localError"
+                class="text-sm text-center text-red-600"
+                data-testid="login-error"
+              >
+                {{ localError }}
+              </p>
 
               <div class="relative">
                 <div class="absolute inset-0 flex items-center">
@@ -78,6 +99,7 @@ const callback: CallbackTypes.CredentialCallback = async (response) => {
               <div class="text-center">
                 <button
                   class="text-primary-600 hover:text-primary-700 font-semibold transition-colors"
+                  @click="goToRegister"
                 >
                   {{ t('login.signUp') }}
                 </button>
@@ -87,5 +109,5 @@ const callback: CallbackTypes.CredentialCallback = async (response) => {
         </div>
       </div>
     </div>
-  </PublicLayout>
+  </public-layout>
 </template>
