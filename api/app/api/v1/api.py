@@ -1,9 +1,10 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import activity, auth, import_, insights, task, timer
+from app.api.v1.endpoints import activity, auth, import_, insights, task, timer, webauthn
 
 api_router = APIRouter()
 api_router.include_router(auth.router, tags=["login"])
+api_router.include_router(webauthn.router, tags=["webauthn"])
 api_router.include_router(activity.router, tags=["activity"])
 api_router.include_router(task.router, tags=["tasks"])
 api_router.include_router(import_.router, prefix="/import", tags=["import"])
