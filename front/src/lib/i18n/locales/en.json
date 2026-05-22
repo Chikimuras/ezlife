@@ -59,7 +59,7 @@
     "signIn": "Sign in",
     "fields": {
       "email": "Email",
-      "emailPlaceholder": "you@example.com",
+      "emailPlaceholder": "you{'@'}example.com",
       "name": "Name",
       "namePlaceholder": "Your name"
     }
