@@ -1,9 +1,9 @@
-.PHONY: dev preprod prod down logs ps setup
+.PHONY: dev preprod prod down logs ps setup migrate
 
 dev:
 	docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml up --build -d
 	@echo ""
-	@echo "  → https://local.ezlife.com"
+	@echo "  → https://local.ezlife.com:8443"
 	@echo "  → Traefik dashboard: http://localhost:8080"
 	@echo ""
 
@@ -32,3 +32,6 @@ setup:
 	@echo "Adding local domains to /etc/hosts (requires sudo)..."
 	@grep -q "local.ezlife.com" /etc/hosts || echo "127.0.0.1 local.ezlife.com preprod.ezlife.com" | sudo tee -a /etc/hosts
 	@echo "Done. Domains: local.ezlife.com, preprod.ezlife.com"
+
+migrate:
+	docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml exec api alembic upgrade head

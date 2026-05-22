@@ -12,7 +12,7 @@ Follow these guidelines strictly to maintain codebase consistency and quality.
 - **UI Library**: Shadcn-vue (Headless primitives + Tailwind)
 - **State Management**: Pinia (Setup Stores)
 - **API Client**: Ky.js + Zod (Type-safe fetching)
-- **Auth**: Google OAuth2 (`vue3-google-login`)
+- **Auth**: WebAuthn passkeys (`@simplewebauthn/browser`)
 
 ## 2. Operational Commands
 

@@ -41,11 +41,28 @@
     }
   },
   "login": {
-    "googleButton": "Continue with Google",
+    "passkeyButton": "Sign in with a passkey",
+    "signingIn": "Signing in...",
+    "error": "Sign-in failed. Please try again.",
     "noAccount": "Don't have an account?",
     "signUp": "Sign up",
     "subtitle": "Sign in to continue tracking your activities",
     "title": "Welcome Back"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Create a passkey to get started",
+    "submit": "Create my account",
+    "submitting": "Creating account...",
+    "error": "Registration failed. Please try again.",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "fields": {
+      "email": "Email",
+      "emailPlaceholder": "you{'@'}example.com",
+      "name": "Name",
+      "namePlaceholder": "Your name"
+    }
   },
   "nav": {
     "activities": "Activities",
@@ -224,7 +241,35 @@
     "tabs": {
       "categories": "Categories",
       "groups": "Groups",
-      "import": "Import"
+      "import": "Import",
+      "security": "Security"
+    },
+    "passkeys": {
+      "title": "Passkeys",
+      "subtitle": "Manage the passkeys that can sign in to your account.",
+      "addButton": "Add a passkey",
+      "adding": "Adding...",
+      "empty": "No passkeys yet. Add one to sign in faster.",
+      "never": "Never",
+      "unknownDevice": "Unknown device",
+      "lastOneTooltip": "You cannot delete your last passkey.",
+      "columns": {
+        "device": "Device",
+        "createdAt": "Added on",
+        "lastUsed": "Last used",
+        "actions": "Actions"
+      },
+      "confirmDelete": {
+        "title": "Delete this passkey?",
+        "message": "This passkey will no longer be able to sign in to your account."
+      },
+      "messages": {
+        "fetchError": "Failed to load passkeys",
+        "added": "Passkey added successfully",
+        "addError": "Failed to add passkey",
+        "deleted": "Passkey deleted",
+        "deleteError": "Failed to delete passkey"
+      }
     },
     "title": "Settings"
   },

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingView from '../views/LandingView.vue'
 import LoginView from '../views/LoginView.vue'
+import RegisterView from '../views/RegisterView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import SettingsView from '../views/SettingsView.vue'
 import ActivitiesView from '../views/ActivitiesView.vue'
@@ -20,6 +21,12 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+      meta: { requiresAuth: false },
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
       meta: { requiresAuth: false },
     },
     {
@@ -67,8 +74,8 @@ router.beforeEach(async (to, _from, next) => {
     }
 
     next()
-  } else if (to.name === 'login' && authStore.isAuthenticated) {
-    next({ name: 'activities' })
+  } else if ((to.name === 'login' || to.name === 'register') && authStore.isAuthenticated) {
+    next({ name: 'dashboard' })
   } else {
     next()
   }

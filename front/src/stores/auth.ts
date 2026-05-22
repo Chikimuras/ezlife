@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
+import type {
+  PublicKeyCredentialCreationOptionsJSON,
+  PublicKeyCredentialRequestOptionsJSON,
+} from '@simplewebauthn/browser'
 import { authApi } from '@/lib/api/auth'
 import type { User } from '@/lib/api/schemas/auth'
 import { errorLogger } from '@/lib/errors/errorLogger'
@@ -44,16 +49,45 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('auth_user')
   }
 
-  const loginWithGoogle = async (googleToken: string) => {
+  const loginWithPasskey = async () => {
     try {
       isLoading.value = true
       error.value = null
-      const response = await authApi.loginWithGoogle(googleToken)
+      const options =
+        (await authApi.getLoginOptions()) as unknown as PublicKeyCredentialRequestOptionsJSON
+      const credential = await startAuthentication({ optionsJSON: options })
+      const response = await authApi.verifyLogin(credential)
       setAuth(response.accessToken, response.user)
-      errorLogger.logInfo('User logged in successfully via Google', { userId: response.user.id })
+      errorLogger.logInfo('User logged in successfully via passkey', {
+        userId: response.user.id,
+      })
       return response
     } catch (err) {
-      error.value = 'Google login failed'
+      error.value = 'Passkey login failed'
+      await handleAuthError(err)
+      throw err
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const registerWithPasskey = async (payload: { email: string; name: string }) => {
+    try {
+      isLoading.value = true
+      error.value = null
+      const options = (await authApi.getRegisterOptions(
+        payload.email,
+        payload.name,
+      )) as unknown as PublicKeyCredentialCreationOptionsJSON
+      const credential = await startRegistration({ optionsJSON: options })
+      const response = await authApi.verifyRegistration(credential)
+      setAuth(response.accessToken, response.user)
+      errorLogger.logInfo('User registered successfully via passkey', {
+        userId: response.user.id,
+      })
+      return response
+    } catch (err) {
+      error.value = 'Passkey registration failed'
       await handleAuthError(err)
       throw err
     } finally {
@@ -121,10 +155,13 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     isLoading,
     error,
-    loginWithGoogle,
+    loginWithPasskey,
+    registerWithPasskey,
     fetchCurrentUser,
     refreshToken,
     logout,
+    setAuth,
+    clearAuth,
     onTokenUpdated,
   }
 })

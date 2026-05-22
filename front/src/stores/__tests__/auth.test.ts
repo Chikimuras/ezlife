@@ -3,6 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import { authApi } from '@/lib/api/auth'
 import type { User } from '@/lib/api/schemas/auth'
+import { startAuthentication, startRegistration } from '@simplewebauthn/browser'
 
 const handleAuthErrorMock = vi.fn(async () => undefined)
 const handleApiErrorMock = vi.fn(async () => undefined)
@@ -10,11 +11,19 @@ const routerPushMock = vi.fn()
 
 vi.mock('@/lib/api/auth', () => ({
   authApi: {
-    loginWithGoogle: vi.fn(),
+    getLoginOptions: vi.fn(),
+    verifyLogin: vi.fn(),
+    getRegisterOptions: vi.fn(),
+    verifyRegistration: vi.fn(),
     me: vi.fn(),
     refresh: vi.fn(),
     logout: vi.fn(),
   },
+}))
+
+vi.mock('@simplewebauthn/browser', () => ({
+  startAuthentication: vi.fn(),
+  startRegistration: vi.fn(),
 }))
 
 vi.mock('@/composables/useErrorHandler', () => ({
@@ -62,14 +71,23 @@ describe('auth store', () => {
     })
   })
 
-  it('loginWithGoogle success sets auth state and persists data', async () => {
+  it('loginWithPasskey success sets auth state and persists data', async () => {
     const store = useAuthStore()
+    const options = { challenge: 'opts' }
+    const credential = { id: 'cred', rawId: 'cred', response: {} }
     const response = { accessToken: 'tok', user: baseUser }
-    vi.mocked(authApi.loginWithGoogle).mockResolvedValue(response)
+    vi.mocked(authApi.getLoginOptions).mockResolvedValue(options)
+    vi.mocked(startAuthentication).mockResolvedValue(
+      credential as Awaited<ReturnType<typeof startAuthentication>>,
+    )
+    vi.mocked(authApi.verifyLogin).mockResolvedValue(response)
 
-    const result = await store.loginWithGoogle('google-token')
+    const result = await store.loginWithPasskey()
 
     expect(result).toEqual(response)
+    expect(authApi.getLoginOptions).toHaveBeenCalledOnce()
+    expect(startAuthentication).toHaveBeenCalledWith({ optionsJSON: options })
+    expect(authApi.verifyLogin).toHaveBeenCalledWith(credential)
     expect(store.token).toBe('tok')
     expect(store.user).toEqual(baseUser)
     expect(store.isAuthenticated).toBe(true)
@@ -78,14 +96,55 @@ describe('auth store', () => {
     expect(localStorage.setItem).toHaveBeenCalledWith('auth_user', JSON.stringify(baseUser))
   })
 
-  it('loginWithGoogle failure sets error and delegates handling', async () => {
+  it('loginWithPasskey failure sets error and delegates handling', async () => {
     const store = useAuthStore()
-    const failure = new Error('google failed')
-    vi.mocked(authApi.loginWithGoogle).mockRejectedValue(failure)
+    const failure = new Error('user cancelled')
+    vi.mocked(authApi.getLoginOptions).mockResolvedValue({ challenge: 'opts' })
+    vi.mocked(startAuthentication).mockRejectedValue(failure)
 
-    await expect(store.loginWithGoogle('google-token')).rejects.toThrow('google failed')
+    await expect(store.loginWithPasskey()).rejects.toThrow('user cancelled')
 
-    expect(store.error).toBe('Google login failed')
+    expect(store.error).toBe('Passkey login failed')
+    expect(store.isLoading).toBe(false)
+    expect(handleAuthErrorMock).toHaveBeenCalledWith(failure)
+  })
+
+  it('registerWithPasskey success sets auth state', async () => {
+    const store = useAuthStore()
+    const options = { challenge: 'opts' }
+    const credential = { id: 'cred', rawId: 'cred', response: {} }
+    const response = { accessToken: 'new-tok', user: baseUser }
+    vi.mocked(authApi.getRegisterOptions).mockResolvedValue(options)
+    vi.mocked(startRegistration).mockResolvedValue(
+      credential as Awaited<ReturnType<typeof startRegistration>>,
+    )
+    vi.mocked(authApi.verifyRegistration).mockResolvedValue(response)
+
+    const result = await store.registerWithPasskey({
+      email: 'new@example.com',
+      name: 'New',
+    })
+
+    expect(result).toEqual(response)
+    expect(authApi.getRegisterOptions).toHaveBeenCalledWith('new@example.com', 'New')
+    expect(startRegistration).toHaveBeenCalledWith({ optionsJSON: options })
+    expect(authApi.verifyRegistration).toHaveBeenCalledWith(credential)
+    expect(store.token).toBe('new-tok')
+    expect(store.user).toEqual(baseUser)
+    expect(store.isAuthenticated).toBe(true)
+  })
+
+  it('registerWithPasskey failure sets error and delegates handling', async () => {
+    const store = useAuthStore()
+    const failure = new Error('attestation failed')
+    vi.mocked(authApi.getRegisterOptions).mockResolvedValue({ challenge: 'opts' })
+    vi.mocked(startRegistration).mockRejectedValue(failure)
+
+    await expect(
+      store.registerWithPasskey({ email: 'new@example.com', name: 'New' }),
+    ).rejects.toThrow('attestation failed')
+
+    expect(store.error).toBe('Passkey registration failed')
     expect(store.isLoading).toBe(false)
     expect(handleAuthErrorMock).toHaveBeenCalledWith(failure)
   })
