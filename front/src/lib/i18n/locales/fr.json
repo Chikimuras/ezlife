@@ -241,7 +241,35 @@
     "tabs": {
       "categories": "Catégories",
       "groups": "Groupes",
-      "import": "Import"
+      "import": "Import",
+      "security": "Sécurité"
+    },
+    "passkeys": {
+      "title": "Passkeys",
+      "subtitle": "Gérez les passkeys autorisées à se connecter à votre compte.",
+      "addButton": "Ajouter une passkey",
+      "adding": "Ajout en cours...",
+      "empty": "Aucune passkey enregistrée. Ajoutez-en une pour vous connecter plus vite.",
+      "never": "Jamais",
+      "unknownDevice": "Appareil inconnu",
+      "lastOneTooltip": "Vous ne pouvez pas supprimer votre dernière passkey.",
+      "columns": {
+        "device": "Appareil",
+        "createdAt": "Ajoutée le",
+        "lastUsed": "Dernière utilisation",
+        "actions": "Actions"
+      },
+      "confirmDelete": {
+        "title": "Supprimer cette passkey ?",
+        "message": "Cette passkey ne pourra plus se connecter à votre compte."
+      },
+      "messages": {
+        "fetchError": "Impossible de charger les passkeys",
+        "added": "Passkey ajoutée avec succès",
+        "addError": "Échec de l'ajout de la passkey",
+        "deleted": "Passkey supprimée",
+        "deleteError": "Échec de la suppression de la passkey"
+      }
     },
     "title": "Paramètres"
   },
