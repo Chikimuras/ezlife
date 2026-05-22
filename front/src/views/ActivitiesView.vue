@@ -7,14 +7,29 @@ import ActivityDialog from '@/components/features/ActivityDialog.vue'
 import { useActivitiesStore } from '@/stores/activities'
 import { useCategoriesStore } from '@/stores/categories'
 import { useGroupsStore } from '@/stores/groups'
+import { useTimerStore } from '@/stores/timer'
 import { useToast } from '@/composables/useToast'
 import type { CreateActivity, Activity, UpdateActivity } from '@/lib/api/schemas/activity'
+import ActivityTimer from '@/components/features/ActivityTimer.vue'
+import CategorySelector from '@/components/features/CategorySelector.vue'
+import ActiveTimerDialog from '@/components/features/ActiveTimerDialog.vue'
 
 const { t } = useI18n()
 const { success, error } = useToast()
 const activitiesStore = useActivitiesStore()
 const categoriesStore = useCategoriesStore()
 const groupsStore = useGroupsStore()
+const timerStore = useTimerStore()
+const isCategorySelectorOpen = ref(false)
+const isActiveTimerDialogOpen = ref(false)
+
+const activeTimerCategoryName = computed(() => {
+  if (!timerStore.activeActivity) return ''
+  return (
+    categoriesStore.categories.find((c) => c.id === timerStore.activeActivity?.categoryId)?.name ??
+    t('activities.timer.categoryUnavailable')
+  )
+})
 
 // Restore view mode from localStorage or default to 'day'
 const savedViewMode = localStorage.getItem('activities-view-mode') as 'day' | 'week' | null
@@ -50,11 +65,15 @@ const timeSlots = Array.from({ length: 24 }, (_, i) => {
 onMounted(async () => {
   await Promise.all([categoriesStore.fetchCategories(), groupsStore.fetchGroups()])
 
-  // Load activities based on saved view mode
   if (viewMode.value === 'week') {
     await fetchWeekActivities()
   } else {
     await activitiesStore.fetchActivitiesByDate(formattedDate.value)
+  }
+
+  const activeTimer = await timerStore.checkActiveTimer()
+  if (activeTimer) {
+    isActiveTimerDialogOpen.value = true
   }
 })
 
@@ -199,7 +218,7 @@ const handleSaveActivity = async (data: CreateActivity) => {
       success(t('activities.messages.created'))
     }
     editingActivityId.value = null
-  } catch (err) {
+  } catch {
     error(
       editingActivityId.value
         ? t('activities.messages.updateError')
@@ -214,7 +233,7 @@ const handleDeleteActivity = async (activityId: string) => {
     success(t('activities.messages.deleted'))
     isActivityDialogOpen.value = false
     editingActivityId.value = null
-  } catch (err) {
+  } catch {
     error(t('activities.messages.deleteError'))
   }
 }
@@ -290,6 +309,16 @@ const handleDragStart = (activity: Activity, event: MouseEvent) => {
 
     const activity = activitiesStore.activities.find((a) => a.id === draggedActivity.value)
     if (!activity) {
+      draggedActivity.value = null
+      isDragging.value = false
+      hasMoved.value = false
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      return
+    }
+
+    if (!activity.endTime) {
+      // Cannot drag a running timer activity
       draggedActivity.value = null
       isDragging.value = false
       hasMoved.value = false
@@ -468,6 +497,17 @@ const handleResizeStart = (activity: Activity, mode: 'top' | 'bottom', event: Mo
       return
     }
 
+    if (!activity.endTime) {
+      // Cannot resize a running timer activity
+      draggedActivity.value = null
+      isDragging.value = false
+      hasMoved.value = false
+      resizeMode.value = 'none'
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      return
+    }
+
     const activityElement = document.querySelector(`[data-activity-id="${draggedActivity.value}"]`)
     if (!(activityElement instanceof HTMLElement)) {
       draggedActivity.value = null
@@ -544,6 +584,8 @@ const hasTimeConflict = (
     // If date is provided, only check conflicts on that date
     if (date && activity.date !== date) return false
 
+    if (!activity.endTime) return false
+
     const actStartParts = activity.startTime.split(':')
     const actEndParts = activity.endTime.split(':')
     const actStartMinutes =
@@ -572,6 +614,20 @@ const getCategoryColor = (categoryId: string): string => {
 
 const getActivityStyle = (activity: (typeof activitiesStore.activities)[0]) => {
   const startParts = activity.startTime.split(':')
+
+  if (!activity.endTime) {
+    const startMinutes = parseInt(startParts[0] ?? '0') * 60 + parseInt(startParts[1] ?? '0')
+    const now = new Date()
+    const nowMinutes = now.getHours() * 60 + now.getMinutes()
+    const durationMinutes = Math.max(30, nowMinutes - startMinutes)
+    const top = startMinutes
+    return {
+      top: `${top}px`,
+      height: `${durationMinutes}px`,
+      backgroundColor: getCategoryColor(activity.categoryId),
+    }
+  }
+
   const endParts = activity.endTime.split(':')
 
   const startMinutes = parseInt(startParts[0] ?? '0') * 60 + parseInt(startParts[1] ?? '0')
@@ -587,7 +643,10 @@ const getActivityStyle = (activity: (typeof activitiesStore.activities)[0]) => {
   return {
     top: `${top}px`,
     height: `${height}px`,
-    backgroundColor: activity.isFromTask && activity.taskListColor ? activity.taskListColor : getCategoryColor(activity.categoryId),
+    backgroundColor:
+      activity.isFromTask && activity.taskListColor
+        ? activity.taskListColor
+        : getCategoryColor(activity.categoryId),
   }
 }
 
@@ -612,6 +671,8 @@ const snapToInterval = (minutes: number, snapInterval: number = 15): number => {
 }
 
 const getActivityDuration = (activity: Activity): string => {
+  if (!activity.endTime) return t('activities.timer.running')
+
   const startParts = activity.startTime.split(':')
   const endParts = activity.endTime.split(':')
   const startMinutes = parseInt(startParts[0] ?? '0') * 60 + parseInt(startParts[1] ?? '0')
@@ -628,6 +689,8 @@ const getActivityDuration = (activity: Activity): string => {
 }
 
 const shouldShowText = (activity: Activity): boolean => {
+  if (!activity.endTime) return true
+
   const startParts = activity.startTime.split(':')
   const endParts = activity.endTime.split(':')
   const startMinutes = parseInt(startParts[0] ?? '0') * 60 + parseInt(startParts[1] ?? '0')
@@ -655,6 +718,52 @@ const getHoveredActivity = computed(() => {
   if (!hoveredActivity.value) return null
   return activitiesStore.activities.find((a) => a.id === hoveredActivity.value) ?? null
 })
+const handleStartTimerClick = () => {
+  isCategorySelectorOpen.value = true
+}
+
+const handleCategorySelected = async (categoryId: string) => {
+  try {
+    await timerStore.startTimer(categoryId)
+    success(t('activities.messages.created'))
+  } catch {
+    error(t('activities.messages.createError'))
+  }
+}
+
+const handleTimerStop = async () => {
+  try {
+    await timerStore.stopTimer()
+    success(t('activities.messages.updated'))
+    await activitiesStore.fetchActivitiesByDate(formattedDate.value)
+  } catch {
+    error(t('activities.messages.updateError'))
+  }
+}
+
+const handleTimerContinue = () => {
+  isActiveTimerDialogOpen.value = false
+}
+
+const handleTimerStopNow = async () => {
+  try {
+    await timerStore.stopTimer()
+    success(t('activities.messages.updated'))
+    await activitiesStore.fetchActivitiesByDate(formattedDate.value)
+  } catch {
+    error(t('activities.messages.updateError'))
+  }
+}
+
+const handleTimerStopAt = async (endTime: string) => {
+  try {
+    await timerStore.stopTimerAt(endTime)
+    success(t('activities.messages.updated'))
+    await activitiesStore.fetchActivitiesByDate(formattedDate.value)
+  } catch {
+    error(t('activities.messages.updateError'))
+  }
+}
 </script>
 
 <template>
@@ -733,6 +842,18 @@ const getHoveredActivity = computed(() => {
         </div>
       </div>
 
+      <!-- Timer section -->
+      <div class="px-4 py-3 border-b border-gray-200 bg-white">
+        <ActivityTimer
+          v-if="timerStore.isRunning"
+          :category-name="activeTimerCategoryName"
+          @stop="handleTimerStop"
+        />
+        <Button v-else size="lg" class="w-full" @click="handleStartTimerClick">
+          {{ t('activities.timer.startButton') }}
+        </Button>
+      </div>
+
       <div class="flex-1 overflow-auto bg-gray-50">
         <!-- Day View -->
         <div v-if="viewMode === 'day'" class="max-w-4xl mx-auto p-4">
@@ -756,8 +877,13 @@ const getHoveredActivity = computed(() => {
                     {{ slot }}
                   </div>
                   <div
-                    class="min-h-[60px] hover:bg-primary-50/30 transition-colors cursor-pointer border-t border-gray-100"
-                    @click="handleTimeSlotClick(slot)"
+                    class="min-h-[60px] transition-colors border-t border-gray-100"
+                    :class="
+                      timerStore.isRunning
+                        ? 'cursor-not-allowed opacity-50'
+                        : 'hover:bg-primary-50/30 cursor-pointer'
+                    "
+                    @click="timerStore.isRunning ? undefined : handleTimeSlotClick(slot)"
                   ></div>
                 </template>
               </div>
@@ -795,24 +921,36 @@ const getHoveredActivity = computed(() => {
 
                     <template v-if="shouldShowText(activity)">
                       <div class="font-semibold flex items-center gap-1.5">
-                        <svg v-if="activity.isFromTask" class="w-3 h-3 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <svg
+                          v-if="activity.isFromTask"
+                          class="w-3 h-3 opacity-75 flex-shrink-0"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
                         </svg>
                         <span class="truncate">{{ getActivityDisplayName(activity) }}</span>
                       </div>
                       <div v-if="activity.isFromTask" class="flex items-center gap-1 mt-0.5">
-                        <span 
+                        <span
                           class="inline-flex items-center px-1.5 py-0 rounded-full text-[10px] font-medium"
-                          :style="{ 
-                            backgroundColor: getCategoryColor(activity.categoryId) + '33', 
-                            color: getCategoryColor(activity.categoryId) 
+                          :style="{
+                            backgroundColor: getCategoryColor(activity.categoryId) + '33',
+                            color: getCategoryColor(activity.categoryId),
                           }"
                         >
                           {{ getCategoryName(activity.categoryId) }}
                         </span>
                       </div>
                       <div class="text-xs opacity-90">
-                        {{ activity.startTime }} - {{ activity.endTime }}
+                        {{ activity.startTime }} -
+                        {{ activity.endTime ?? t('activities.timer.running') }}
                       </div>
                       <div v-if="activity.notes" class="text-xs opacity-75 truncate">
                         {{ activity.notes }}
@@ -868,8 +1006,13 @@ const getHoveredActivity = computed(() => {
                   <div
                     v-for="(date, dayIndex) in getWeekDates"
                     :key="`${slot}-${dayIndex}`"
-                    class="relative min-h-[60px] hover:bg-primary-50/30 transition-colors cursor-pointer border-t border-gray-100 border-r border-gray-50 last:border-r-0"
-                    @click="handleWeekTimeSlotClick(date, slot)"
+                    class="relative min-h-[60px] transition-colors border-t border-gray-100 border-r border-gray-50 last:border-r-0"
+                    :class="
+                      timerStore.isRunning
+                        ? 'cursor-not-allowed opacity-50'
+                        : 'hover:bg-primary-50/30 cursor-pointer'
+                    "
+                    @click="timerStore.isRunning ? undefined : handleWeekTimeSlotClick(date, slot)"
                   >
                     <!-- Activities overlay for this cell's day - only render on first time slot -->
                     <div
@@ -906,9 +1049,22 @@ const getHoveredActivity = computed(() => {
                         </div>
 
                         <template v-if="shouldShowText(activity)">
-                          <div class="font-semibold text-xs leading-tight truncate flex items-center gap-1">
-                            <svg v-if="activity.isFromTask" class="w-2.5 h-2.5 opacity-75 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <div
+                            class="font-semibold text-xs leading-tight truncate flex items-center gap-1"
+                          >
+                            <svg
+                              v-if="activity.isFromTask"
+                              class="w-2.5 h-2.5 opacity-75 flex-shrink-0"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                              />
                             </svg>
                             <span class="truncate">{{ getActivityDisplayName(activity) }}</span>
                           </div>
@@ -944,6 +1100,18 @@ const getHoveredActivity = computed(() => {
       @delete="handleDeleteActivity"
     />
 
+    <CategorySelector v-model:open="isCategorySelectorOpen" @select="handleCategorySelected" />
+
+    <ActiveTimerDialog
+      v-model:open="isActiveTimerDialogOpen"
+      :category-name="activeTimerCategoryName"
+      :start-time="timerStore.activeActivity?.startTime ?? ''"
+      :elapsed-formatted="timerStore.elapsedFormatted"
+      @continue="handleTimerContinue"
+      @stop-now="handleTimerStopNow"
+      @stop-at="handleTimerStopAt"
+    />
+
     <!-- Global tooltip portal -->
     <Teleport to="body">
       <Transition
@@ -968,8 +1136,19 @@ const getHoveredActivity = computed(() => {
           >
             <div class="space-y-1">
               <div class="font-semibold flex items-center gap-1.5">
-                <svg v-if="getHoveredActivity.isFromTask" class="w-3 h-3 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  v-if="getHoveredActivity.isFromTask"
+                  class="w-3 h-3 opacity-75"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 {{ getActivityDisplayName(getHoveredActivity) }}
               </div>
@@ -978,14 +1157,15 @@ const getHoveredActivity = computed(() => {
                   class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium"
                   :style="{
                     backgroundColor: getCategoryColor(getHoveredActivity.categoryId) + '33',
-                    color: getCategoryColor(getHoveredActivity.categoryId)
+                    color: getCategoryColor(getHoveredActivity.categoryId),
                   }"
                 >
                   {{ getCategoryName(getHoveredActivity.categoryId) }}
                 </span>
               </div>
               <div class="text-xs opacity-90">
-                {{ getHoveredActivity.startTime }} - {{ getHoveredActivity.endTime }}
+                {{ getHoveredActivity.startTime }} -
+                {{ getHoveredActivity.endTime ?? t('activities.timer.running') }}
                 <span class="opacity-75">({{ getActivityDuration(getHoveredActivity) }})</span>
               </div>
               <div

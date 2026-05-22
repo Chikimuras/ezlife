@@ -14,7 +14,8 @@
     "dismiss": "Dismiss",
     "contactSupport": "Contact Support",
     "goBack": "Go Back",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "noData": "No data available"
   },
   "landing": {
     "features": {
@@ -83,6 +84,20 @@
       "deleted": "Activity deleted successfully",
       "deleteError": "Failed to delete activity",
       "conflictError": "Time conflict with another activity"
+    },
+    "timer": {
+      "title": "Activity in progress",
+      "startButton": "Start an activity",
+      "stop": "Stop",
+      "yes": "Yes",
+      "finishNow": "Finish now",
+      "finishAt": "Finished at",
+      "categoryUnavailable": "Category unavailable",
+      "selectCategory": "Select a category",
+      "startCategory": "Start",
+      "elapsed": "Elapsed time",
+      "running": "Running",
+      "blockedCreation": "Cannot add an activity while a timer is running"
     }
   },
   "import": {
